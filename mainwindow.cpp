@@ -22,12 +22,9 @@ MainWindow::MainWindow(QWidget *parent)
     //Подключаем networkManager к обработчику ответа
     connect(manager, &QNetworkAccessManager::finished, this, &MainWindow::onResult);
                                         //57.264586, 44.532377
-    //api.openweathermap.org/data/2.5/weather?q=Moscow,ru&APPID=e00d5025c5df6647aa2aeeb34f92eb1c
-    //QUrl url("https://api.weather.yandex.ru/v1/forecast?lat=57.264586&lon=44.532377&lang=ru_RU&limit=1&hours=false");
     QUrl url("http://api.openweathermap.org/data/2.5/weather?q=Moscow,ru&");
     QNetworkRequest request(url);
-    //request.setRawHeader(QByteArray("X-Yandex-API-Key"),QByteArray("a2064c5d-f5ac-4ac9-9646-5abcbfa92f12"));
-    request.setRawHeader(QByteArray("APPID"),QByteArray("f32fcd94d9aad60903d7702471434295"));
+    request.setRawHeader(QByteArray("APPID"),QByteArray(""));
 
 
     manager->get(request);  //Получаем данные, а именно JSON файл с сайта по определённому url
