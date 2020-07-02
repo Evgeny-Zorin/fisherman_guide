@@ -27,6 +27,7 @@ public:
     ~MainWindow();
 
 private slots:
+
     void on_pushButton_clicked();
     void on_comboBoxTables_activated(int index);
     void on_comboBoxColumn_activated(int index);
