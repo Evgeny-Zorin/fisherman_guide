@@ -8,6 +8,7 @@
 #include <QNetworkReply>
 #include <QUrl>
 #include <QFile>
+#include <QBitArray>
 #include <fstream>
 
 
@@ -22,12 +23,14 @@ MainWindow::MainWindow(QWidget *parent)
     //Подключаем networkManager к обработчику ответа
     connect(manager, &QNetworkAccessManager::finished, this, &MainWindow::onResult);
                                         //57.264586, 44.532377
-    QUrl url("http://api.openweathermap.org/data/2.5/weather?q=Moscow,ru&");
+    //api.openweathermap.org/data/2.5/weather?q={city name}&appid={your api key}
+    //QUrl url("http://api.openweathermap.org/data/2.5/weather?id=2172797");
+    QUrl url("http://api.openweathermap.org/data/2.5/weather?q=London&appid=f32fcd94d9aad60903d7702471434295");
     QNetworkRequest request(url);
-    request.setRawHeader(QByteArray("APPID"),QByteArray(""));
+    //request.setRawHeader(QByteArray("APPID"),QByteArray("f32fcd94d9aad60903d7702471434295"));
 
 
-    manager->get(request);  //Получаем данные, а именно JSON файл с сайта по определённому url
+    manager->get(request);  //Получаем данные, JSON файл с сайта по определённому url
 
 
 qDebug() << QSslSocket::supportsSsl() << QSslSocket::sslLibraryBuildVersionString() << QSslSocket::sslLibraryVersionString();
@@ -140,6 +143,9 @@ void MainWindow::onResult(QNetworkReply *reply)
 {
     qDebug() << reply->error();
     QByteArray bytes = reply->readAll();
+//       // QString string = reply->readAll();
+//               qDebug() << "reply == huntReplay: " << bytes;
+
     QJsonDocument jsonDocument(QJsonDocument::fromJson(bytes));
     QString saveFileName = QFileDialog::getSaveFileName(this,
                                                         tr("Save Json File"),
@@ -154,6 +160,11 @@ void MainWindow::onResult(QNetworkReply *reply)
     // Write the current Json object to a file.
     jsonFile.write(QJsonDocument(jsonDocument).toJson(QJsonDocument::Indented));
     jsonFile.close();   // Close file
+
+
+
+
+
 
 //    qDebug() << reply->error();
 //   // QByteArray bytes = reply->readAll();
