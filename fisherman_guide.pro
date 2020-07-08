@@ -9,10 +9,12 @@ CONFIG += c++11
 DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
+    classfish.cpp \
     main.cpp \
     mainwindow.cpp
 
 HEADERS += \
+    classfish.h \
     mainwindow.h
 
 FORMS += \
