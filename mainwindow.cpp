@@ -19,18 +19,8 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
     list = new QStringList;
 
-    QNetworkAccessManager* manager = new QNetworkAccessManager(0);
-    //Подключаем networkManager к обработчику ответа
-    connect(manager, &QNetworkAccessManager::finished, this, &MainWindow::onResult);
-                                        //57.264586, 44.532377
-    //api.openweathermap.org/data/2.5/weather?q={city name}&appid={your api key}
-    //QUrl url("http://api.openweathermap.org/data/2.5/weather?id=2172797");
-    QUrl url("http://api.openweathermap.org/data/2.5/weather?q=London&appid=f32fcd94d9aad60903d7702471434295");
-    QNetworkRequest request(url);
-    //request.setRawHeader(QByteArray("APPID"),QByteArray("f32fcd94d9aad60903d7702471434295"));
+    connect(ui->actionExit, SIGNAL(triggered()), this, SLOT(close()));          //go to tray
 
-
-    manager->get(request);  //Получаем данные, JSON файл с сайта по определённому url
 
 
 qDebug() << QSslSocket::supportsSsl() << QSslSocket::sslLibraryBuildVersionString() << QSslSocket::sslLibraryVersionString();
@@ -56,8 +46,7 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-
-void MainWindow::on_pushButton_clicked()
+void MainWindow::on_actionOpen_DBase_triggered()
 {
     pathDB = QFileDialog::getOpenFileName(this, "Open file", "", "*db");
     dataBase = QSqlDatabase::addDatabase("QSQLITE");
@@ -68,6 +57,18 @@ void MainWindow::on_pushButton_clicked()
         refreshList();
     }
 }
+
+//void MainWindow::on_pushButton_clicked()
+//{
+//    pathDB = QFileDialog::getOpenFileName(this, "Open file", "", "*db");
+//    dataBase = QSqlDatabase::addDatabase("QSQLITE");
+//    dataBase.setDatabaseName(pathDB);
+//    if(dataBase.open()) {
+//        sqlQuery = QSqlQuery(dataBase);
+//        fillingData();
+//        refreshList();
+//    }
+//}
 
 void MainWindow::fillingData()
 {
@@ -137,6 +138,25 @@ void MainWindow::on_lineEdit_textChanged(const QString &arg1)
     QRegExp regExp(arg1, Qt::CaseInsensitive, QRegExp::Wildcard);
     ui->listWidget->clear();
     ui->listWidget->addItems(list->filter(regExp));
+}
+
+void MainWindow::on_search_city_clicked()
+{
+    QNetworkAccessManager* manager = new QNetworkAccessManager(0);
+    //Подключаем networkManager к обработчику ответа
+    connect(manager, &QNetworkAccessManager::finished, this, &MainWindow::onResult);
+                                        //57.264586, 44.532377
+    //api.openweathermap.org/data/2.5/weather?q={city name}&appid={your api key}
+    QString nameCity = ui->lbl_City->text();    //to take the name CITY
+    ui->lbl_City->clear();                      //clear the input line
+    QString urlwithCity = "http://api.openweathermap.org/data/2.5/weather?q=" + nameCity + "&appid=f32fcd94d9aad60903d7702471434295";
+    QUrl url(urlwithCity);
+    QNetworkRequest request(url);
+    //request.setRawHeader(QByteArray("APPID"),QByteArray("f32fcd94d9aad60903d7702471434295"));
+
+
+    manager->get(request);  //Получаем данные, JSON файл с сайта по определённому url
+
 }
 
 void MainWindow::onResult(QNetworkReply *reply)
@@ -213,3 +233,12 @@ void MainWindow::onResult(QNetworkReply *reply)
 //    }
 //    reply->deleteLater();
 }
+
+
+
+void MainWindow::on_actionExit_triggered()
+{
+
+}
+
+

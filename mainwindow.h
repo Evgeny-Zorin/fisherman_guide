@@ -21,6 +21,8 @@ class MainWindow : public QMainWindow
     QSqlQuery sqlQuery;
     QString pathDB;
     QStringList* list;
+private:
+    QString AppID;
 
 public:
     MainWindow(QWidget *parent = nullptr);
@@ -28,13 +30,16 @@ public:
 
 private slots:
 
-    void on_pushButton_clicked();
+    //void on_pushButton_clicked();
     void on_comboBoxTables_activated(int index);
     void on_comboBoxColumn_activated(int index);
     void on_lineEdit_textChanged(const QString &arg1);
 
     // Обработчик данных полученных от объекта QNetworkAccessManager
     void onResult(QNetworkReply *reply);//будет разбираться JSON файл при получении ответа от сайта с содержимым файла.
+    void on_actionOpen_DBase_triggered();
+    void on_actionExit_triggered();
+    void on_search_city_clicked();
 
 private:
     Ui::MainWindow *ui;
