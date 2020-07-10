@@ -48,6 +48,15 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_actionOpen_DBase_triggered()
 {
+    //QFileDialog::DontUseNativeDialog;
+//    const QStringList filters({"DB files (*db)"
+////                               "Any files (*)"
+//                              });
+//    QFileDialog dialog(this);
+//    dialog.setNameFilters(filters);
+//    dialog.exec();
+//    pathDB = dialog.getOpenFileName();
+
     pathDB = QFileDialog::getOpenFileName(this, "Open file", "", "*db");
     dataBase = QSqlDatabase::addDatabase("QSQLITE");
     dataBase.setDatabaseName(pathDB);
@@ -58,17 +67,19 @@ void MainWindow::on_actionOpen_DBase_triggered()
     }
 }
 
-//void MainWindow::on_pushButton_clicked()
-//{
-//    pathDB = QFileDialog::getOpenFileName(this, "Open file", "", "*db");
-//    dataBase = QSqlDatabase::addDatabase("QSQLITE");
-//    dataBase.setDatabaseName(pathDB);
-//    if(dataBase.open()) {
-//        sqlQuery = QSqlQuery(dataBase);
-//        fillingData();
-//        refreshList();
-//    }
-//}
+void MainWindow::on_pushButton_clicked()
+{
+    pathDB = QFileDialog::getOpenFileName(this, "Open file", "", "");
+    dataBase = QSqlDatabase::addDatabase("QSQLITE");
+    dataBase.setDatabaseName(pathDB);
+    if(dataBase.open()) {
+        qDebug()<<"start read DB";
+        sqlQuery = QSqlQuery(dataBase);
+        fillingData();
+        refreshList();
+    }
+    else qDebug()<<"error open DB";
+}
 
 void MainWindow::fillingData()
 {
@@ -240,5 +251,6 @@ void MainWindow::on_actionExit_triggered()
 {
 
 }
+
 
 

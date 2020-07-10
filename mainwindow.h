@@ -1,4 +1,4 @@
- #ifndef MAINWINDOW_H
+#ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
 #include <QMainWindow>
@@ -8,6 +8,7 @@
 #include <QRegExp>
 #include <QWidget>
 #include <QNetworkAccessManager>
+//#include <QWebEngine>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -30,7 +31,7 @@ public:
 
 private slots:
 
-    //void on_pushButton_clicked();
+    void on_pushButton_clicked();
     void on_comboBoxTables_activated(int index);
     void on_comboBoxColumn_activated(int index);
     void on_lineEdit_textChanged(const QString &arg1);
@@ -40,6 +41,7 @@ private slots:
     void on_actionOpen_DBase_triggered();
     void on_actionExit_triggered();
     void on_search_city_clicked();
+
 
 private:
     Ui::MainWindow *ui;
