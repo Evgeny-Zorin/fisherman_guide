@@ -10,6 +10,12 @@
 #include <QFile>
 #include <QBitArray>
 #include <fstream>
+#include <QWebEngineView>
+#include <QDockWidget>
+
+#include <QScriptEngine>
+#include <QScriptContext>
+#include <QScriptValue>
 
 
 MainWindow::MainWindow(QWidget *parent)
@@ -249,8 +255,14 @@ void MainWindow::onResult(QNetworkReply *reply)
 
 void MainWindow::on_actionExit_triggered()
 {
-
+    QApplication::quit();
 }
 
-
-
+void MainWindow::on_DockMapBtn_clicked()
+{
+//    QWebEngineView *web = new QWebEngineView;
+//    web->load(QUrl(""));
+//    web->show();
+    ui->preview->load(QUrl("https://github.com/Evgeny-Zorin/fisherman_guide"));
+    ui->preview->show();
+}

@@ -1,6 +1,9 @@
-QT       += core gui sql
-QT       += network
-#QT       += webengine
+QT      += core gui sql
+QT      += network
+QT      += webengine
+QT      += webenginewidgets
+QT      += script
+QT      += sql
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -11,16 +14,17 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
     classfish.cpp \
+    database.cpp \
     main.cpp \
     mainwindow.cpp
 
 HEADERS += \
     classfish.h \
+    database.h \
     mainwindow.h
 
 FORMS += \
-    mainwindow.ui \
-    mapUi.ui
+    mainwindow.ui
 
 TRANSLATIONS += \
     fisherman_guide_ru_RU.ts

@@ -6,29 +6,19 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>601</width>
-    <height>406</height>
+    <width>774</width>
+    <height>452</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralWidget">
-   <widget class="QTextEdit" name="textEdit">
-    <property name="geometry">
-     <rect>
-      <x>340</x>
-      <y>100</y>
-      <width>211</width>
-      <height>191</height>
-     </rect>
-    </property>
-   </widget>
    <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>60</y>
+      <y>146</y>
       <width>285</width>
       <height>245</height>
      </rect>
@@ -87,8 +77,8 @@
    <widget class="QLineEdit" name="lbl_City">
     <property name="geometry">
      <rect>
-      <x>180</x>
-      <y>10</y>
+      <x>140</x>
+      <y>110</y>
       <width>191</width>
       <height>31</height>
      </rect>
@@ -97,8 +87,8 @@
    <widget class="QPushButton" name="search_city">
     <property name="geometry">
      <rect>
-      <x>410</x>
-      <y>10</y>
+      <x>330</x>
+      <y>110</y>
       <width>80</width>
       <height>24</height>
      </rect>
@@ -111,7 +101,7 @@
     <property name="geometry">
      <rect>
       <x>40</x>
-      <y>20</y>
+      <y>106</y>
       <width>80</width>
       <height>24</height>
      </rect>
@@ -126,8 +116,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>601</width>
-     <height>21</height>
+     <width>774</width>
+     <height>20</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -168,6 +158,25 @@
    </attribute>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
+  <widget class="QDockWidget" name="dockWidget">
+   <attribute name="dockWidgetArea">
+    <number>2</number>
+   </attribute>
+   <widget class="QWidget" name="dockWidgetContents">
+    <layout class="QGridLayout" name="gridLayout_2">
+     <item row="0" column="0">
+      <widget class="QWebEngineView" name="preview" native="true"/>
+     </item>
+     <item row="1" column="0">
+      <widget class="QPushButton" name="DockMapBtn">
+       <property name="text">
+        <string>DockMapBtn</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+  </widget>
   <action name="actionEn_English">
    <property name="text">
     <string>En-English</string>
@@ -190,6 +199,14 @@
   </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
+ <customwidgets>
+  <customwidget>
+   <class>QWebEngineView</class>
+   <extends>QWidget</extends>
+   <header>qwebengineview.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>

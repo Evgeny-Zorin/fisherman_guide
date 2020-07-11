@@ -8,7 +8,9 @@
 #include <QRegExp>
 #include <QWidget>
 #include <QNetworkAccessManager>
-//#include <QWebEngine>
+#include <QWebEngineView>
+#include <QSqlTableModel>
+#include "database.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -43,6 +45,8 @@ private slots:
     void on_search_city_clicked();
 
 
+    void on_DockMapBtn_clicked();
+
 private:
     Ui::MainWindow *ui;
 
@@ -54,5 +58,8 @@ private:
     void refreshList();
 
     QNetworkAccessManager *networkManager;
+
+private:
+    QWebEngineView *m_view;
 };
 #endif // MAINWINDOW_H
