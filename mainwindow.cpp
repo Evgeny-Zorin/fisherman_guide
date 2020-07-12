@@ -23,7 +23,7 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    list = new QStringList;
+    li/-st = new QStringList;
 
     connect(ui->actionExit, SIGNAL(triggered()), this, SLOT(close()));          //go to tray
 

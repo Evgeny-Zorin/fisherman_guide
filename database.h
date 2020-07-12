@@ -8,6 +8,9 @@
 #include <QFile>
 #include <QDate>
 #include <QDebug>
+#include <QDir>
+#include <QCoreApplication>
+
 
 /* Директивы имен таблицы, полей таблицы и базы данных */
 #define DATABASE_HOSTNAME   "Fish_Db"
@@ -15,9 +18,6 @@
 
 #define TABLE                   "TableExample"
 #define TABLE_DATE              "Date"
-#define TABLE_TIME              "Time"
-#define TABLE_MESSAGE           "Message"
-#define TABLE_RANDOM            "Random"
 
 class DataBase : public QObject
 {
@@ -30,7 +30,8 @@ public:
     bool inserIntoTable(const QVariantList &data);  //вставка записей в таблицу
 
 private:
-    QSqlDatabase    db; //объект базы данных
+    QSqlDatabase db;    //объект базы данных
+    QString pathDb;     //путь к бд
 
 private:
     bool openDataBase();

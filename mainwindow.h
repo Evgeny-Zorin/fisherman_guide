@@ -61,5 +61,8 @@ private:
 
 private:
     QWebEngineView *m_view;
+private:
+    DataBase        *db;       //объект для взаимодействия с бд
+    QSqlTableModel  *model;    //модель представления таблицы базы данных
 };
 #endif // MAINWINDOW_H
