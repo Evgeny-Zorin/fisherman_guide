@@ -44,12 +44,9 @@ private slots:
     void on_actionExit_triggered();
     void on_search_city_clicked();
 
-
     void on_DockMapBtn_clicked();
 
 private:
-    Ui::MainWindow *ui;
-
     void fillingData();
     void addTables();
     void makeRequest();
@@ -57,6 +54,8 @@ private:
     void addValue(int index);
     void refreshList();
 
+private:
+    Ui::MainWindow *ui;
     QNetworkAccessManager *networkManager;
 
 private:
@@ -64,5 +63,8 @@ private:
 private:
     DataBase        *db;       //объект для взаимодействия с бд
     QSqlTableModel  *model;    //модель представления таблицы базы данных
+private:
+    void setupModelDb(const QString &tableName, const QStringList &headers);
+    void createTableViewUi();    //формирует вид TableView
 };
 #endif // MAINWINDOW_H

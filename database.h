@@ -39,6 +39,8 @@ private:
     void closeDataBase();
     bool createTable();
 
+
+
 };
 
 #endif // DATABASE_H

@@ -12,7 +12,7 @@
 #include <fstream>
 #include <QWebEngineView>
 #include <QDockWidget>
-
+#include <QMessageBox>
 #include <QScriptEngine>
 #include <QScriptContext>
 #include <QScriptValue>
@@ -23,29 +23,58 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    li/-st = new QStringList;
+    list = new QStringList;
 
     connect(ui->actionExit, SIGNAL(triggered()), this, SLOT(close()));          //go to tray
-
-
-
 qDebug() << QSslSocket::supportsSsl() << QSslSocket::sslLibraryBuildVersionString() << QSslSocket::sslLibraryVersionString();
+
+    db = new DataBase();
+    db->connectToDataBase();
+
+//Инициализируем модель для представления данных с заданием названий колонок
+    this->setupModelDb(TABLE,
+                     QStringList() << trUtf8("id")
+                                   << trUtf8("Дата")
+               );
+
+//Инициализируем внешний вид таблицы с данными
+    this->createTableViewUi();
+
+
+     m_view = new QWebEngineView(this);
+     QWebEnginePage *page = m_view->page();
+     ui->preview->setPage(page);    //добавим QWebEngineView в доксистему
+
+     connect(page, &QWebEnginePage::featurePermissionRequested,
+             [this, page](const QUrl &securityOrigin, QWebEnginePage::Feature feature)
+     {
+//Этот сигнал испускается всякий раз, когда веб-страница запрашивает использование
+//определенной функции или устройства, включая не только службы определения местоположения,
+//но и устройства захвата звука или блокировки мыши, например.
+//В этом примере мы обрабатываем только запросы на службы определения местоположения:
+         if (feature != QWebEnginePage::Geolocation)
+             return;
+
+         QMessageBox msgBox(this);
+         msgBox.setText(tr("%1 wants to know your location").arg(securityOrigin.host()));
+         msgBox.setInformativeText(tr("Do you want to send your current location to this website?"));
+         msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
+         msgBox.setDefaultButton(QMessageBox::Yes);
+
+         if (msgBox.exec() == QMessageBox::Yes) {
+             page->setFeaturePermission(
+                 securityOrigin, feature, QWebEnginePage::PermissionGrantedByUser);
+         } else {
+             page->setFeaturePermission(
+                 securityOrigin, feature, QWebEnginePage::PermissionDeniedByUser);
+         }
+     });
+
+//     page->load(QUrl(QStringLiteral("https://yandex.ru/pogoda/nizhny-novgorod/maps/nowcast?via=mmapwb&le_Lightning=1")));
+        page->load(QUrl(QStringLiteral("qrc:/resource/js_yaMap/html/mapbasics.html")));
+        //page->load(QUrl(QStringLiteral("qrc:/resource/js_yaMap/html/mapparams.html")));
+
 }
-//    dataBase = QSqlDatabase::addDatabase("QSQLITE");
-//    dataBase.setDatabaseName("users.db");
-
-//    if(dataBase.open()){
-//        sqlQuery = QSqlQuery(dataBase);
-//        sqlQuery.exec("SELECT * FROM users");
-//        for(const QString& tableName: dataBase.tables())
-//            qDebug()<<tableName;
-//        int count = sqlQuery.record().count();
-//        for(int i = 0; i < count; i++)
-//            qDebug()<<sqlQuery.record().field(i).name();
-//        while(sqlQuery.next())
-//            qDebug()<<sqlQuery.value(1).toString();
-//    }
-
 
 MainWindow::~MainWindow()
 {
@@ -87,52 +116,6 @@ void MainWindow::on_pushButton_clicked()
     else qDebug()<<"error open DB";
 }
 
-void MainWindow::fillingData()
-{
-    addTables();
-    makeRequest();
-    addColumns();
-    addValue(0);
-}
-
-//добавляем доступные таблицы
-void MainWindow::addTables()
-{
-    ui->comboBoxTables->clear();
-    for(const QString &tableName: dataBase.tables())
-        ui->comboBoxTables->addItem(tableName);
-}
-
-//запрос на выбранную пользователем таблицу
-void MainWindow::makeRequest()
-{
-    QString tableName = ui->comboBoxTables->currentText();
-    sqlQuery.exec("SELECT * FROM " + tableName + "");
-}
-
-//добавляем строки из выбранной таблицы
-void MainWindow::addColumns()
-{
-    ui->comboBoxColumn->clear();
-    int columnCount = sqlQuery.record().count();
-    for(int i = 0; i < columnCount; i++)
-        ui->comboBoxColumn->addItem(sqlQuery.record().field(i).name());
-}
-
-//добавляем значения выбранного столбца
-void MainWindow::addValue(int index)
-{
-    ui->listWidget->clear();
-    while(sqlQuery.next())
-        ui->listWidget->addItem(sqlQuery.value(index).toString());
-}
-
-void MainWindow::refreshList()
-{
-    list->clear();
-    for(int i = 0; i < ui->listWidget->count(); i++)
-        list->append(ui->listWidget->item(i)->text());
-}
 
 void MainWindow::on_comboBoxTables_activated(int index)
 {
@@ -149,6 +132,63 @@ void MainWindow::on_comboBoxColumn_activated(int index)
     addValue(index);
     refreshList();
 }
+
+void MainWindow::fillingData()
+{
+    addTables();
+    makeRequest();
+    addColumns();
+    addValue(0);
+}
+//добавляем доступные таблицы
+void MainWindow::addTables()
+{
+    ui->comboBoxTables->clear();
+    for(const QString &tableName: dataBase.tables())
+        ui->comboBoxTables->addItem(tableName);
+}
+//запрос на выбранную пользователем таблицу
+void MainWindow::makeRequest()
+{
+        QString tableName = ui->comboBoxTables->currentText();
+        sqlQuery.exec("SELECT * FROM " + tableName + "");
+}
+//добавляем строки из выбранной таблицы
+void MainWindow::addColumns()
+{
+        ui->comboBoxColumn->clear();
+        int columnCount = sqlQuery.record().count();
+        for(int i = 0; i < columnCount; i++)
+            ui->comboBoxColumn->addItem(sqlQuery.record().field(i).name());
+}
+//добавляем значения выбранного столбца
+void MainWindow::addValue(int index)
+{
+        ui->listWidget->clear();
+        while(sqlQuery.next())
+            ui->listWidget->addItem(sqlQuery.value(index).toString());
+}
+
+//void MainWindow::addTables()
+//{
+//    ui->comboBoxTables->clear();
+//    for(const QString &tableName: model->tableName())
+//    {
+//        qDebug()<<model->tableName();
+//        ui->comboBoxTables->addItem(tableName);
+//    }
+//}
+
+
+void MainWindow::refreshList()
+{
+        list->clear();
+        for(int i = 0; i < ui->listWidget->count(); i++)
+            list->append(ui->listWidget->item(i)->text());
+}
+
+
+
 
 void MainWindow::on_lineEdit_textChanged(const QString &arg1)
 {
@@ -198,57 +238,6 @@ void MainWindow::onResult(QNetworkReply *reply)
     jsonFile.write(QJsonDocument(jsonDocument).toJson(QJsonDocument::Indented));
     jsonFile.close();   // Close file
 
-
-
-
-
-
-//    qDebug() << reply->error();
-//   // QByteArray bytes = reply->readAll();
-//    QString string = reply->readAll();
-//            //qDebug() << "reply == huntReplay: " << bytes;
-//            //std::string nameFile  = "Json.json";
-//            QFile file("out.txt");
-//            if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
-//                return;
-
-//            QTextStream out(&file);
-//            out << "The magic number is: " << string;
-
-
-//    // Если ошибки отсутствуют
-//    if(!reply->error()){
-
-//        // То создаём объект Json Document, считав в него все данные из ответа
-//        QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
-
-//        // Забираем из документа корневой объект
-//        QJsonObject root = document.object();
-//        /* Находим объект "departament", который располагается самым первым в корневом объекте.
-//         * С помощью метода keys() получаем список всех объектов и по первому индексу
-//         * забираем название объекта, по которому получим его значение
-//         * */
-//        ui->textEdit->append(root.keys().at(0) + ": " + root.value(root.keys().at(0)).toString());
-
-//        // Второе значение пропишем строкой
-//        QJsonValue jv = root.value("employees");
-//        // Если значение является массивом, ...
-//        if(jv.isArray()){
-//            // ... то забираем массив из данного свойства
-//            QJsonArray ja = jv.toArray();
-//            // Перебирая все элементы массива ...
-//            for(int i = 0; i < ja.count(); i++){
-//                QJsonObject subtree = ja.at(i).toObject();
-//                // Забираем значения свойств имени и фамилии добавляя их в textEdit
-//                ui->textEdit->append(subtree.value("firstName").toString() +
-//                                     " " +
-//                                     subtree.value("lastName").toString());
-//            }
-//        }
-//        // В конце забираем свойство количества сотрудников отдела и также выводим в textEdit
-//        ui->textEdit->append(QString::number(root.value("number").toInt()));
-//    }
-//    reply->deleteLater();
 }
 
 
@@ -265,4 +254,38 @@ void MainWindow::on_DockMapBtn_clicked()
 //    web->show();
     ui->preview->load(QUrl("https://github.com/Evgeny-Zorin/fisherman_guide"));
     ui->preview->show();
+}
+//Метод для инициализации модеи представления данных
+void MainWindow::setupModelDb(const QString &tableName, const QStringList &headers)
+{
+//Производим инициализацию модели представления данных
+//с установкой имени таблицы в базе данных, по которому
+//будет производится обращение в таблице
+        model = new QSqlTableModel(this);
+        model->setTable(tableName);
+
+//Устанавливаем названия колонок в таблице с сортировкой данных
+        for(int i = 0, j = 0; i < model->columnCount(); i++, j++){
+            model->setHeaderData(i,Qt::Horizontal,headers[j]);
+            //    ui->comboBoxTables->clear();
+            //    for(const QString &tableName: dataBase.tables())
+            //        ui->comboBoxTables->addItem(tableName);
+        }
+//Устанавливаем сортировку по возрастанию данных по нулевой колонке
+        model->setSort(0,Qt::AscendingOrder);
+}
+
+void MainWindow::createTableViewUi()
+{
+    ui->tableViewBd->setModel(model);     // Устанавливаем модель на TableView
+    ui->tableViewBd->setColumnHidden(0, true);    // Скрываем колонку с id записей
+// Разрешаем выделение строк
+    ui->tableViewBd->setSelectionBehavior(QAbstractItemView::SelectRows);
+// Устанавливаем режим выделения лишь одно строки в таблице
+    ui->tableViewBd->setSelectionMode(QAbstractItemView::SingleSelection);
+// Устанавливаем размер колонок по содержимому
+    ui->tableViewBd->resizeColumnsToContents();
+    ui->tableViewBd->setEditTriggers(QAbstractItemView::NoEditTriggers);
+    ui->tableViewBd->horizontalHeader()->setStretchLastSection(true);
+    model->select(); // Делаем выборку данных из таблицы
 }
