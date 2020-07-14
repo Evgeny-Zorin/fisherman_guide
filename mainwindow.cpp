@@ -75,7 +75,7 @@ qDebug() << QSslSocket::supportsSsl() << QSslSocket::sslLibraryBuildVersionStrin
 
         webobj = new WebClass();
         channel = new QWebChannel(this);
-        channel->registerObject("server", webobj);
+        channel->registerObject("qProxy", webobj);
         page->setWebChannel(channel);
 }
 
@@ -172,17 +172,6 @@ void MainWindow::addValue(int index)
             ui->listWidget->addItem(sqlQuery.value(index).toString());
 }
 
-//void MainWindow::addTables()
-//{
-//    ui->comboBoxTables->clear();
-//    for(const QString &tableName: model->tableName())
-//    {
-//        qDebug()<<model->tableName();
-//        ui->comboBoxTables->addItem(tableName);
-//    }
-//}
-
-
 void MainWindow::refreshList()
 {
         list->clear();
@@ -252,11 +241,7 @@ void MainWindow::on_actionExit_triggered()
 
 void MainWindow::on_DockMapBtn_clicked()
 {
-//    const QVariant myvar = webview.page()->mainFrame()->evaluateJavaScript("window.myint");
-//    bool ok;
-//    const int myint = myvar.toInt(&ok);
-//    if (!ok)
-//      qWarning() << "Error getting int from JS";
+
 }
 //Метод для инициализации модеи представления данных
 void MainWindow::setupModelDb(const QString &tableName, const QStringList &headers)

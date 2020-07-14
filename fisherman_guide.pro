@@ -17,14 +17,12 @@ SOURCES += \
     database.cpp \
     main.cpp \
     mainwindow.cpp \
-    qjavascriptproxi.cpp \
     webclass.cpp
 
 HEADERS += \
     classfish.h \
     database.h \
     mainwindow.h \
-    qjavascriptproxi.h \
     webclass.h
 
 FORMS += \

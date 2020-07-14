@@ -1,6 +1,5 @@
 new QWebChannel(qt.webChannelTransport,
- (channel) => {
- var server = channel.objects.server;
- window.server = server;
- //alert("Channel set");
-});
+ function(channel){
+ var qProxy = channel.objects.qProxy;
+ window.foo = qProxy;
+ });

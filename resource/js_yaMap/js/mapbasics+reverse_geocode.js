@@ -1,5 +1,4 @@
 var myMap;
-
 // Дождёмся загрузки API и готовности DOM.
 ymaps.ready(init);
 
@@ -18,7 +17,8 @@ function init () {
     // Слушаем клик на карте.
     myMap.events.add('click', function (e) {
         var coords = e.get('coords');
-
+        foo.getCoordsFromScript(coords);
+        //console.log(globCoords);
         // Если метка уже создана – просто передвигаем ее.
         if (myPlacemark) {
             myPlacemark.geometry.setCoordinates(coords);
@@ -75,6 +75,8 @@ function init () {
 
 function setCenter () {
     myMap.setCenter([67.02097139978888, 34.12532682715678]);
+    //foo.jscallme(globCoords);
+    //foo.getCoordsFromScript(globCoords);
 }
 
 function setBounds () {
@@ -89,6 +91,6 @@ function setTypeAndPan () {
     // Плавное перемещение центра карты в точку с новыми координатами.
     myMap.panTo([62.915, 34.461], {
             // Задержка между перемещениями.
-            delay: 1000
+            delay: 500
         });
 }
