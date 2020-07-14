@@ -12,18 +12,20 @@
 class WebClass : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(QString someattribute MEMBER m_someattribute)
+    //Q_PROPERTY(QString someattribute MEMBER m_someattribute)
 public:
     explicit WebClass(QObject *parent = nullptr);
 
 public slots:
     void calledFromJs();
     Q_INVOKABLE void getCoordsFromScript(const QJsonValue &_qJsonVal);
+    double getLat() const{return lat;}
+    double getLon() const{return lon;}
 
 private:
-        QString m_someattribute;
-        double lat;
-        double lon;
+    //QString m_someattribute;
+    double lat;
+    double lon;
 };
 
 #endif // WEBCLASS_H

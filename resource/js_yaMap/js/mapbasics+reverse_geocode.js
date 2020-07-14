@@ -1,4 +1,5 @@
 var myMap;
+var globCoords
 // Дождёмся загрузки API и готовности DOM.
 ymaps.ready(init);
 
@@ -13,12 +14,13 @@ function init () {
     }, {
         searchControlProvider: 'yandex#search'
     },);
+    globCoords = myMap.getCenter(); //получу начальные координаты центра карты
+    foo.getCoordsFromScript(globCoords);
     var myPlacemark;
     // Слушаем клик на карте.
     myMap.events.add('click', function (e) {
         var coords = e.get('coords');
         foo.getCoordsFromScript(coords);
-        //console.log(globCoords);
         // Если метка уже создана – просто передвигаем ее.
         if (myPlacemark) {
             myPlacemark.geometry.setCoordinates(coords);

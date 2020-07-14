@@ -198,7 +198,17 @@ void MainWindow::on_search_city_clicked()
     //api.openweathermap.org/data/2.5/weather?q={city name}&appid={your api key}
     QString nameCity = ui->lbl_City->text();    //to take the name CITY
     ui->lbl_City->clear();                      //clear the input line
-    QString urlwithCity = "http://api.openweathermap.org/data/2.5/weather?q=" + nameCity + "&appid=f32fcd94d9aad60903d7702471434295";
+
+    QString lat, lon;
+    lat = QString::number(webobj->getLat());
+    lon =QString::number(webobj->getLon());
+
+    QString urlwithCity = "http://api.openweathermap.org/data/2.5/weather?"
+            "lat=" + lat +
+            "&lon=" + lon +
+            "&appid=f32fcd94d9aad60903d7702471434295";
+
+    //QString urlwithCity = "http://api.openweathermap.org/data/2.5/weather?q=" + nameCity + "&appid=f32fcd94d9aad60903d7702471434295";
     QUrl url(urlwithCity);
     QNetworkRequest request(url);
     //request.setRawHeader(QByteArray("APPID"),QByteArray("f32fcd94d9aad60903d7702471434295"));
