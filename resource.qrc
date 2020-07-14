@@ -1,7 +1,9 @@
 <RCC>
     <qresource prefix="/">
         <file>resource/js_yaMap/html/mapbasics.html</file>
-        <file>resource/js_yaMap/js/mapbasics.js</file>
+        <file>resource/js_yaMap/js/mapbasics+reverse_geocode.js</file>
+        <file>resource/qwebchannel.js</file>
+        <file>resource/qtconnector.js</file>
     </qresource>
     <qresource prefix="/rec"/>
 </RCC>

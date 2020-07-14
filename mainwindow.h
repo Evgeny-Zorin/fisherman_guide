@@ -11,6 +11,7 @@
 #include <QWebEngineView>
 #include <QSqlTableModel>
 #include "database.h"
+#include "webclass.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -66,5 +67,8 @@ private:
 private:
     void setupModelDb(const QString &tableName, const QStringList &headers);
     void createTableViewUi();    //формирует вид TableView
+private:
+    WebClass *webobj;
+    QWebChannel *channel;
 };
 #endif // MAINWINDOW_H

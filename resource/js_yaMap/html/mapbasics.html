@@ -9,30 +9,40 @@
         Получить ключ можно в Кабинете разработчика: https://developer.tech.yandex.ru/keys/
     -->
     <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU&amp;apikey=69f6e734-7ea3-4cf9-a896-ac308e839f0f" type="text/javascript"></script>
-    <script src="qrc:/resource/js_yaMap/js/mapbasics.js" type="text/javascript"></script>
-	<style>
+    <script src="qrc:/resource/js_yaMap/js/mapbasics+reverse_geocode.js" type="text/javascript"></script>
+        <style type="text/css">
         body, html {
             padding: 0;
             margin: 0;
             width: 100%;
             height: 100%;
+            font-family: Arial;
+            font-size: 14px;
         }
         #map {
             width: 100%;
             height: 90%;
+        }
+        .header {
+            padding: 5px;
         }
     </style>
 </head>
 
 
 <body>
+
 <div id="map"></div>
+<!--
 <input type="button" id="destroyButton" value="Удалить карту"/>
+-->
 <div id="buttons">
     <input type="button" value="Изменить центр" onclick="setCenter();" />
     <input type="button" value="Изменить границы" onclick="setBounds();" />
     <input type="button" value="Изменить тип и плавно переместиться" onclick="setTypeAndPan();" />
 </div>
 </body>
+<script src="qrc:/resource/qwebchannel.js"></script>
+<script src="qrc:/resource/qtconnector.js"></script>
 
 </html>

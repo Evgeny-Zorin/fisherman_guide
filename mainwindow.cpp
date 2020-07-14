@@ -18,6 +18,7 @@
 #include <QScriptValue>
 
 
+
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
@@ -70,10 +71,12 @@ qDebug() << QSslSocket::supportsSsl() << QSslSocket::sslLibraryBuildVersionStrin
          }
      });
 
-//     page->load(QUrl(QStringLiteral("https://yandex.ru/pogoda/nizhny-novgorod/maps/nowcast?via=mmapwb&le_Lightning=1")));
         page->load(QUrl(QStringLiteral("qrc:/resource/js_yaMap/html/mapbasics.html")));
-        //page->load(QUrl(QStringLiteral("qrc:/resource/js_yaMap/html/mapparams.html")));
 
+        webobj = new WebClass();
+        channel = new QWebChannel(this);
+        channel->registerObject("server", webobj);
+        page->setWebChannel(channel);
 }
 
 MainWindow::~MainWindow()
@@ -249,11 +252,11 @@ void MainWindow::on_actionExit_triggered()
 
 void MainWindow::on_DockMapBtn_clicked()
 {
-//    QWebEngineView *web = new QWebEngineView;
-//    web->load(QUrl(""));
-//    web->show();
-    ui->preview->load(QUrl("https://github.com/Evgeny-Zorin/fisherman_guide"));
-    ui->preview->show();
+//    const QVariant myvar = webview.page()->mainFrame()->evaluateJavaScript("window.myint");
+//    bool ok;
+//    const int myint = myvar.toInt(&ok);
+//    if (!ok)
+//      qWarning() << "Error getting int from JS";
 }
 //Метод для инициализации модеи представления данных
 void MainWindow::setupModelDb(const QString &tableName, const QStringList &headers)

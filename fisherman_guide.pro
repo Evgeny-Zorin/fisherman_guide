@@ -16,12 +16,16 @@ SOURCES += \
     classfish.cpp \
     database.cpp \
     main.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
+    qjavascriptproxi.cpp \
+    webclass.cpp
 
 HEADERS += \
     classfish.h \
     database.h \
-    mainwindow.h
+    mainwindow.h \
+    qjavascriptproxi.h \
+    webclass.h
 
 FORMS += \
     mainwindow.ui
@@ -38,4 +42,5 @@ RESOURCES += \
     resource.qrc
 
 DISTFILES += \
+    .gitignore \
     Fish_Db
