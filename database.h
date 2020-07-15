@@ -12,11 +12,11 @@
 #include <QCoreApplication>
 
 
-/* Директивы имен таблицы, полей таблицы и базы данных */
+//Директивы имен таблицы, полей таблицы и базы данных
 #define DATABASE_HOSTNAME   "Fish_Db"
-#define DATABASE_NAME       "Fish_Db.db"
+#define DATABASE_NAME       "Fish_Db"
 
-#define TABLE                   "TableExample"
+#define TABLE                   "FisgDataBase"
 #define TABLE_DATE              "Date"
 
 class DataBase : public QObject
@@ -37,7 +37,7 @@ private:
     bool openDataBase();
     bool restoreDataBase();
     void closeDataBase();
-    bool createTable();
+    bool backupTableOpen();
 
 
 

@@ -37,7 +37,6 @@ qDebug() << QSslSocket::supportsSsl() << QSslSocket::sslLibraryBuildVersionStrin
                      QStringList() << "id"
                                    << "Дата"
                );
-
 //Инициализируем внешний вид таблицы с данными
     this->createTableViewUi();
 
@@ -81,20 +80,12 @@ qDebug() << QSslSocket::supportsSsl() << QSslSocket::sslLibraryBuildVersionStrin
 
 MainWindow::~MainWindow()
 {
+    //m_view->~QWebEngineView();
     delete ui;
 }
 
 void MainWindow::on_actionOpen_DBase_triggered()
 {
-    //QFileDialog::DontUseNativeDialog;
-//    const QStringList filters({"DB files (*db)"
-////                               "Any files (*)"
-//                              });
-//    QFileDialog dialog(this);
-//    dialog.setNameFilters(filters);
-//    dialog.exec();
-//    pathDB = dialog.getOpenFileName();
-
     pathDB = QFileDialog::getOpenFileName(this, "Open file", "", "*db");
     dataBase = QSqlDatabase::addDatabase("QSQLITE");
     dataBase.setDatabaseName(pathDB);
@@ -213,9 +204,7 @@ void MainWindow::on_search_city_clicked()
     QNetworkRequest request(url);
     //request.setRawHeader(QByteArray("APPID"),QByteArray("f32fcd94d9aad60903d7702471434295"));
 
-
     manager->get(request);  //Получаем данные, JSON файл с сайта по определённому url
-
 }
 
 void MainWindow::onResult(QNetworkReply *reply)
@@ -253,7 +242,7 @@ void MainWindow::on_DockMapBtn_clicked()
 {
 
 }
-//Метод для инициализации модеи представления данных
+//Метод для инициализации модели представления данных
 void MainWindow::setupModelDb(const QString &tableName, const QStringList &headers)
 {
     qDebug()<<" start setupModelDb";
@@ -285,4 +274,5 @@ void MainWindow::createTableViewUi()
     ui->tableViewBd->setEditTriggers(QAbstractItemView::NoEditTriggers);
     ui->tableViewBd->horizontalHeader()->setStretchLastSection(true);
     model->select(); // Делаем выборку данных из таблицы
+
 }

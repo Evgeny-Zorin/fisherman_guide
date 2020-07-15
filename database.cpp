@@ -1,6 +1,4 @@
 #include "database.h"
-#include "mainwindow.h"
-
 
 DataBase::DataBase(QObject *parent) : QObject(parent)
 {
@@ -16,6 +14,7 @@ void DataBase::connectToDataBase()
 //Перед подключением к базе данных производим проверку на её существование.
 //В зависимости от результата производим открытие базы данных или её восстановление из копии
     pathDb = QCoreApplication::applicationDirPath() + QDir::separator() + DATABASE_NAME;
+    qDebug()<< "pathDb: " << pathDb;
     if(!QFile(pathDb).exists()){
         this->restoreDataBase();
     } else {
@@ -28,7 +27,7 @@ bool DataBase::restoreDataBase()
 {
     qDebug()<<" work restoreDataBase";
     if(this->openDataBase()){
-        if(!this->createTable()){
+        if(!this->backupTableOpen()){
             return false;
         } else {
             return true;
@@ -50,7 +49,7 @@ bool DataBase::openDataBase()
     db.setHostName(DATABASE_HOSTNAME);
     db.setDatabaseName(pathDb);
     if(db.open()){
-            qDebug()<<" DAtaBase is open";
+            qDebug()<<" DataBase is open";
         return true;
     } else {
         return false;
@@ -64,8 +63,10 @@ void DataBase::closeDataBase()
 }
 
 //Метод для создания таблицы в базе данных
-bool DataBase::createTable()
+bool DataBase::backupTableOpen()
 {
+     qDebug()<<" work backupTableOpen";
+   //добавить восстановление из резервной копии
     return true;
 }
 
