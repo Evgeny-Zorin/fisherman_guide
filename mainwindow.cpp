@@ -84,6 +84,11 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+void MainWindow::on_actionExit_triggered()
+{
+    QApplication::quit();
+}
+
 void MainWindow::on_actionOpen_DBase_triggered()
 {
     pathDB = QFileDialog::getOpenFileName(this, "Open file", "", "*db");
@@ -170,9 +175,6 @@ void MainWindow::refreshList()
             list->append(ui->listWidget->item(i)->text());
 }
 
-
-
-
 void MainWindow::on_lineEdit_textChanged(const QString &arg1)
 {
     QRegExp regExp(arg1, Qt::CaseInsensitive, QRegExp::Wildcard);
@@ -181,6 +183,34 @@ void MainWindow::on_lineEdit_textChanged(const QString &arg1)
 }
 
 void MainWindow::on_search_city_clicked()
+{
+//обработчик запроса погоды по ID города
+}
+
+void MainWindow::onResult(QNetworkReply *reply)
+{
+    qDebug() << reply->error();
+    QByteArray bytes = reply->readAll();
+//       // QString string = reply->readAll();
+//               qDebug() << "reply == huntReplay: " << bytes;
+
+    QJsonDocument jsonDocument(QJsonDocument::fromJson(bytes));
+    QString saveFileName = QFileDialog::getSaveFileName(this,
+                                                        tr("Save Json File"),
+                                                        QString(),
+                                                        tr("JSON (*.json)"));
+    QFile jsonFile(saveFileName);
+    if (!jsonFile.open(QIODevice::WriteOnly))
+    {
+        return;
+    }
+
+    // Write the current Json object to a file.
+    jsonFile.write(QJsonDocument(jsonDocument).toJson(QJsonDocument::Indented));
+    jsonFile.close();   // Close file
+}
+
+void MainWindow::on_DockMapBtn_clicked()
 {
     QNetworkAccessManager* manager = new QNetworkAccessManager(0);
     //Подключаем networkManager к обработчику ответа
@@ -206,42 +236,6 @@ void MainWindow::on_search_city_clicked()
 
     manager->get(request);  //Получаем данные, JSON файл с сайта по определённому url
 }
-
-void MainWindow::onResult(QNetworkReply *reply)
-{
-    qDebug() << reply->error();
-    QByteArray bytes = reply->readAll();
-//       // QString string = reply->readAll();
-//               qDebug() << "reply == huntReplay: " << bytes;
-
-    QJsonDocument jsonDocument(QJsonDocument::fromJson(bytes));
-    QString saveFileName = QFileDialog::getSaveFileName(this,
-                                                        tr("Save Json File"),
-                                                        QString(),
-                                                        tr("JSON (*.json)"));
-    QFile jsonFile(saveFileName);
-    if (!jsonFile.open(QIODevice::WriteOnly))
-    {
-        return;
-    }
-
-    // Write the current Json object to a file.
-    jsonFile.write(QJsonDocument(jsonDocument).toJson(QJsonDocument::Indented));
-    jsonFile.close();   // Close file
-
-}
-
-
-
-void MainWindow::on_actionExit_triggered()
-{
-    QApplication::quit();
-}
-
-void MainWindow::on_DockMapBtn_clicked()
-{
-
-}
 //Метод для инициализации модели представления данных
 void MainWindow::setupModelDb(const QString &tableName, const QStringList &headers)
 {
@@ -251,18 +245,24 @@ void MainWindow::setupModelDb(const QString &tableName, const QStringList &heade
 //будет производится обращение в таблице
     model = new QSqlTableModel(this);
     model->setTable(tableName);
+    if (model->lastError().type() != QSqlError::NoError)
+    {
+        QMessageBox msgBox(this);
+        msgBox.setText(model->lastError().text());
+        //emit someEmit(model->lastError().text());
+    }
 
 //Устанавливаем названия колонок в таблице с сортировкой данных
-        for(int i = 0, j = 0; i < model->columnCount(); i++, j++){
-            model->setHeaderData(i,Qt::Horizontal,headers[j]);
-        }
+//        for(int i = 0, j = 0; i < model->columnCount(); i++, j++){
+//            model->setHeaderData(i,Qt::Horizontal,headers[j]);
+//        }
 //Устанавливаем сортировку по возрастанию данных по нулевой колонке
     model->setSort(0,Qt::AscendingOrder);
 }
 
 void MainWindow::createTableViewUi()
 {
-    qDebug()<<" start createTableViewUi";
+//    qDebug()<<" start createTableViewUi";
     ui->tableViewBd->setModel(model);     // Устанавливаем модель на TableView
     ui->tableViewBd->setColumnHidden(0, true);    // Скрываем колонку с id записей
 // Разрешаем выделение строк
@@ -274,5 +274,4 @@ void MainWindow::createTableViewUi()
     ui->tableViewBd->setEditTriggers(QAbstractItemView::NoEditTriggers);
     ui->tableViewBd->horizontalHeader()->setStretchLastSection(true);
     model->select(); // Делаем выборку данных из таблицы
-
 }

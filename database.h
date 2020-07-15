@@ -14,9 +14,9 @@
 
 //Директивы имен таблицы, полей таблицы и базы данных
 #define DATABASE_HOSTNAME   "Fish_Db"
-#define DATABASE_NAME       "Fish_Db"
+#define DATABASE_NAME       "Fish_Db.db"
 
-#define TABLE                   "FisgDataBase"
+#define TABLE                   "Fish"
 #define TABLE_DATE              "Date"
 
 class DataBase : public QObject

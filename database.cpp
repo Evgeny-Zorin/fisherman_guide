@@ -48,6 +48,7 @@ bool DataBase::openDataBase()
     db = QSqlDatabase::addDatabase("QSQLITE");
     db.setHostName(DATABASE_HOSTNAME);
     db.setDatabaseName(pathDb);
+    db.setConnectOptions("QSQLITE_OPEN_READONLY");
     if(db.open()){
             qDebug()<<" DataBase is open";
         return true;
