@@ -50,7 +50,7 @@ bool DataBase::openDataBase()
     db.setHostName(DATABASE_HOSTNAME);
     db.setDatabaseName(pathDb);
     if(db.open()){
-            qDebug()<<" DATABASE is open";
+            qDebug()<<" DAtaBase is open";
         return true;
     } else {
         return false;

@@ -4,14 +4,14 @@
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QJsonArray>
+#include <QUrl>
 #include <QUrlQuery>
 #include <QNetworkReply>
-#include <QUrl>
 #include <QFile>
-#include <QBitArray>
 #include <fstream>
-#include <QWebEngineView>
+#include <QBitArray>
 #include <QDockWidget>
+#include <QWebEngineView>
 #include <QMessageBox>
 #include <QScriptEngine>
 #include <QScriptContext>
@@ -34,8 +34,8 @@ qDebug() << QSslSocket::supportsSsl() << QSslSocket::sslLibraryBuildVersionStrin
 
 //Инициализируем модель для представления данных с заданием названий колонок
     this->setupModelDb(TABLE,
-                     QStringList() << trUtf8("id")
-                                   << trUtf8("Дата")
+                     QStringList() << "id"
+                                   << "Дата"
                );
 
 //Инициализируем внешний вид таблицы с данными
@@ -256,25 +256,24 @@ void MainWindow::on_DockMapBtn_clicked()
 //Метод для инициализации модеи представления данных
 void MainWindow::setupModelDb(const QString &tableName, const QStringList &headers)
 {
+    qDebug()<<" start setupModelDb";
 //Производим инициализацию модели представления данных
 //с установкой имени таблицы в базе данных, по которому
 //будет производится обращение в таблице
-        model = new QSqlTableModel(this);
-        model->setTable(tableName);
+    model = new QSqlTableModel(this);
+    model->setTable(tableName);
 
 //Устанавливаем названия колонок в таблице с сортировкой данных
         for(int i = 0, j = 0; i < model->columnCount(); i++, j++){
             model->setHeaderData(i,Qt::Horizontal,headers[j]);
-            //    ui->comboBoxTables->clear();
-            //    for(const QString &tableName: dataBase.tables())
-            //        ui->comboBoxTables->addItem(tableName);
         }
 //Устанавливаем сортировку по возрастанию данных по нулевой колонке
-        model->setSort(0,Qt::AscendingOrder);
+    model->setSort(0,Qt::AscendingOrder);
 }
 
 void MainWindow::createTableViewUi()
 {
+    qDebug()<<" start createTableViewUi";
     ui->tableViewBd->setModel(model);     // Устанавливаем модель на TableView
     ui->tableViewBd->setColumnHidden(0, true);    // Скрываем колонку с id записей
 // Разрешаем выделение строк

@@ -11,14 +11,14 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>Fisherman guide</string>
   </property>
   <widget class="QWidget" name="centralWidget">
    <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>146</y>
+      <y>247</y>
       <width>285</width>
       <height>245</height>
      </rect>
@@ -78,7 +78,7 @@
     <property name="geometry">
      <rect>
       <x>140</x>
-      <y>110</y>
+      <y>211</y>
       <width>191</width>
       <height>31</height>
      </rect>
@@ -88,7 +88,7 @@
     <property name="geometry">
      <rect>
       <x>330</x>
-      <y>110</y>
+      <y>211</y>
       <width>80</width>
       <height>24</height>
      </rect>
@@ -101,7 +101,7 @@
     <property name="geometry">
      <rect>
       <x>40</x>
-      <y>106</y>
+      <y>207</y>
       <width>80</width>
       <height>24</height>
      </rect>
@@ -114,7 +114,7 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>420</y>
+      <y>521</y>
       <width>256</width>
       <height>192</height>
      </rect>
@@ -143,6 +143,7 @@
     </property>
     <addaction name="actionEn_English"/>
     <addaction name="actionRu_Russian"/>
+    <addaction name="action"/>
    </widget>
    <widget class="QMenu" name="menuAbout">
     <property name="title">
@@ -159,6 +160,7 @@
    <addaction name="menuAppID"/>
    <addaction name="menuAbout"/>
   </widget>
+  <widget class="QStatusBar" name="statusBar"/>
   <widget class="QToolBar" name="mainToolBar">
    <attribute name="toolBarArea">
     <enum>TopToolBarArea</enum>
@@ -167,13 +169,21 @@
     <bool>false</bool>
    </attribute>
   </widget>
-  <widget class="QStatusBar" name="statusBar"/>
   <widget class="QDockWidget" name="dockWidget">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="floating">
+    <bool>false</bool>
+   </property>
    <property name="features">
     <set>QDockWidget::DockWidgetFloatable|QDockWidget::DockWidgetMovable</set>
    </property>
    <property name="allowedAreas">
     <set>Qt::RightDockWidgetArea</set>
+   </property>
+   <property name="windowTitle">
+    <string>Map</string>
    </property>
    <attribute name="dockWidgetArea">
     <number>2</number>
@@ -218,6 +228,11 @@
   <action name="actionOpen_DBase">
    <property name="text">
     <string>Open DBase</string>
+   </property>
+  </action>
+  <action name="action">
+   <property name="text">
+    <string>пишу тут</string>
    </property>
   </action>
  </widget>
