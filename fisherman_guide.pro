@@ -41,4 +41,4 @@ RESOURCES += \
 
 DISTFILES += \
     .gitignore \
-    Fish_Db
+    FishGuadeDB.db

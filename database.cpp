@@ -48,7 +48,7 @@ bool DataBase::openDataBase()
     db = QSqlDatabase::addDatabase("QSQLITE");
     db.setHostName(DATABASE_HOSTNAME);
     db.setDatabaseName(pathDb);
-    db.setConnectOptions("QSQLITE_OPEN_READONLY");
+    db.setConnectOptions("QSQLITE_OPEN_READONLY");  //<~~~~~~~~~~~~~~~~~~~~~~~~
     if(db.open()){
             qDebug()<<" DataBase is open";
         return true;
@@ -60,6 +60,7 @@ bool DataBase::openDataBase()
 //Метод закрытия базы данных
 void DataBase::closeDataBase()
 {
+    qDebug()<<" work closeDataBase";
     db.close();
 }
 

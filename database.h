@@ -13,10 +13,10 @@
 
 
 //Директивы имен таблицы, полей таблицы и базы данных
-#define DATABASE_HOSTNAME   "Fish_Db"
-#define DATABASE_NAME       "Fish_Db.db"
+#define DATABASE_HOSTNAME   "FishGuadeDB"
+#define DATABASE_NAME       "FishGuadeDB.db"
 
-#define TABLE                   "Fish"
+#define TABLE                   "Fish"  //Fish
 #define TABLE_DATE              "Date"
 
 class DataBase : public QObject
@@ -27,6 +27,7 @@ public:
      ~DataBase();
 
     void connectToDataBase();       //Подключение к базе данных
+    void closeDataBase();
     bool inserIntoTable(const QVariantList &data);  //вставка записей в таблицу
 
 private:
@@ -36,7 +37,6 @@ private:
 private:
     bool openDataBase();
     bool restoreDataBase();
-    void closeDataBase();
     bool backupTableOpen();
 
 

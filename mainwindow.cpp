@@ -35,7 +35,8 @@ qDebug() << QSslSocket::supportsSsl() << QSslSocket::sslLibraryBuildVersionStrin
 //Инициализируем модель для представления данных с заданием названий колонок
     this->setupModelDb(TABLE,
                      QStringList() << "id"
-                                   << "Дата"
+                                   << "2"
+                                   << "3"
                );
 //Инициализируем внешний вид таблицы с данными
     this->createTableViewUi();
@@ -81,6 +82,7 @@ qDebug() << QSslSocket::supportsSsl() << QSslSocket::sslLibraryBuildVersionStrin
 MainWindow::~MainWindow()
 {
     //m_view->~QWebEngineView();
+    db->closeDataBase();
     delete ui;
 }
 
@@ -103,16 +105,16 @@ void MainWindow::on_actionOpen_DBase_triggered()
 
 void MainWindow::on_pushButton_clicked()
 {
-    pathDB = QFileDialog::getOpenFileName(this, "Open file", "", "");
-    dataBase = QSqlDatabase::addDatabase("QSQLITE");
-    dataBase.setDatabaseName(pathDB);
-    if(dataBase.open()) {
-        qDebug()<<"start read DB";
-        sqlQuery = QSqlQuery(dataBase);
-        fillingData();
-        refreshList();
-    }
-    else qDebug()<<"error open DB";
+//    pathDB = QFileDialog::getOpenFileName(this, "Open file", "", "");
+//    dataBase = QSqlDatabase::addDatabase("QSQLITE");
+//    dataBase.setDatabaseName(pathDB);
+//    if(dataBase.open()) {
+//        qDebug()<<"start read DB";
+//        sqlQuery = QSqlQuery(dataBase);
+//        fillingData();
+//        refreshList();
+//    }
+//    else qDebug()<<"error open DB";
 }
 
 
@@ -185,6 +187,22 @@ void MainWindow::on_lineEdit_textChanged(const QString &arg1)
 void MainWindow::on_search_city_clicked()
 {
 //обработчик запроса погоды по ID города
+    //27459
+    //api.openweathermap.org/data/2.5/weather?id={city id}&appid={your api key}
+    QNetworkAccessManager* manager = new QNetworkAccessManager(0);
+    //Подключаем networkManager к обработчику ответа
+    connect(manager, &QNetworkAccessManager::finished, this, &MainWindow::onResult);
+                                        //57.264586, 44.532377
+    QString nameCity = ui->lbl_City->text();    //to take the name CITY
+    ui->lbl_City->clear();                      //clear the input line
+
+    QString urlwithCity = "http://api.openweathermap.org/data/2.5/weather?id=27459&appid=f32fcd94d9aad60903d7702471434295";
+    QUrl url(urlwithCity);
+    QNetworkRequest request(url);
+    //request.setRawHeader(QByteArray("APPID"),QByteArray("f32fcd94d9aad60903d7702471434295"));
+
+    manager->get(request);  //Получаем данные, JSON файл с сайта по определённому url
+
 }
 
 void MainWindow::onResult(QNetworkReply *reply)
@@ -245,6 +263,9 @@ void MainWindow::setupModelDb(const QString &tableName, const QStringList &heade
 //будет производится обращение в таблице
     model = new QSqlTableModel(this);
     model->setTable(tableName);
+//    qDebug()<<"start thread::sleep ";
+//    std::this_thread::sleep_for (std::chrono::seconds(12));
+//    qDebug()<<"stop thread::sleep ";
     if (model->lastError().type() != QSqlError::NoError)
     {
         QMessageBox msgBox(this);
@@ -258,13 +279,19 @@ void MainWindow::setupModelDb(const QString &tableName, const QStringList &heade
 //        }
 //Устанавливаем сортировку по возрастанию данных по нулевой колонке
     model->setSort(0,Qt::AscendingOrder);
+    //ui->comboBox->setModel(model);
+    //ui->comboBox->setModelColumn(1);
+    qDebug()<<" start setupModelDb  CLOSE";
 }
 
 void MainWindow::createTableViewUi()
 {
-//    qDebug()<<" start createTableViewUi";
+    qDebug()<<" start createTableViewUi";
     ui->tableViewBd->setModel(model);     // Устанавливаем модель на TableView
+    //std::this_thread::sleep_for (std::chrono::seconds(5));
     ui->tableViewBd->setColumnHidden(0, true);    // Скрываем колонку с id записей
+    ui->tableViewBd->setColumnHidden(3, true);
+    //ui->tableViewBd->setColumnHidden(4, true);
 // Разрешаем выделение строк
     ui->tableViewBd->setSelectionBehavior(QAbstractItemView::SelectRows);
 // Устанавливаем режим выделения лишь одно строки в таблице
@@ -272,6 +299,7 @@ void MainWindow::createTableViewUi()
 // Устанавливаем размер колонок по содержимому
     ui->tableViewBd->resizeColumnsToContents();
     ui->tableViewBd->setEditTriggers(QAbstractItemView::NoEditTriggers);
-    ui->tableViewBd->horizontalHeader()->setStretchLastSection(true);
+    //ui->tableViewBd->horizontalHeader()->setStretchLastSection(true);
+    ui->tableViewBd->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     model->select(); // Делаем выборку данных из таблицы
 }
