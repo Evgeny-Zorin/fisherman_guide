@@ -53,6 +53,8 @@ bool DataBase::openDataBase()
             qDebug()<<" DataBase is open";
         return true;
     } else {
+        QMessageBox::critical(0, qApp->tr("Cannot open database"),
+                              qApp->tr("Click Cancel to exit."), QMessageBox::Cancel);
         return false;
     }
 }

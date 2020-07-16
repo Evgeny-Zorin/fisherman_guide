@@ -10,9 +10,10 @@
 #include <QNetworkAccessManager>
 #include <QWebEngineView>
 #include <QSqlTableModel>
-//#include <QTableView>
+#include <QCompleter>
 #include "database.h"
 #include "webclass.h"
+//#include "completerID.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -65,12 +66,15 @@ private:
 private:
     DataBase        *db;       //объект для взаимодействия с бд
     QSqlTableModel  *model;    //модель представления таблицы базы данных
-    //QTableView  *qTableDB;
 private:
     void setupModelDb(const QString &tableName, const QStringList &headers);
     void createTableViewUi();    //формирует вид TableView
 private:
     WebClass *webobj;
     QWebChannel *channel;
+private:
+    //completerID *completer;
+private slots:
+    void onAddWordCompleter();
 };
 #endif // MAINWINDOW_H

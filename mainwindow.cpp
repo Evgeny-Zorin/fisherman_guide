@@ -18,7 +18,6 @@
 #include <QScriptValue>
 
 
-
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
@@ -27,7 +26,9 @@ MainWindow::MainWindow(QWidget *parent)
     list = new QStringList;
 
     connect(ui->actionExit, SIGNAL(triggered()), this, SLOT(close()));          //go to tray
-qDebug() << QSslSocket::supportsSsl() << QSslSocket::sslLibraryBuildVersionString() << QSslSocket::sslLibraryVersionString();
+    connect(ui->pushButton, SIGNAL(clicked(bool)), SLOT(onAddWordCompleter()));
+
+    qDebug() << QSslSocket::supportsSsl() << QSslSocket::sslLibraryBuildVersionString() << QSslSocket::sslLibraryVersionString();
 
     db = new DataBase();
     db->connectToDataBase();
@@ -77,6 +78,15 @@ qDebug() << QSslSocket::supportsSsl() << QSslSocket::sslLibraryBuildVersionStrin
         channel = new QWebChannel(this);
         channel->registerObject("qProxy", webobj);
         page->setWebChannel(channel);
+
+//        completer = new completerID(this);
+//        completer->mysetModel(model);
+//        ui->lbl_City->setCompleter(completer->getCompl());
+        QCompleter* completer = new QCompleter( this );
+        completer->setModel(model);
+        completer->setCompletionColumn(1);
+        completer->setCaseSensitivity( Qt::CaseInsensitive );
+        ui->FindFish->setCompleter(completer);
 }
 
 MainWindow::~MainWindow()
@@ -105,16 +115,7 @@ void MainWindow::on_actionOpen_DBase_triggered()
 
 void MainWindow::on_pushButton_clicked()
 {
-//    pathDB = QFileDialog::getOpenFileName(this, "Open file", "", "");
-//    dataBase = QSqlDatabase::addDatabase("QSQLITE");
-//    dataBase.setDatabaseName(pathDB);
-//    if(dataBase.open()) {
-//        qDebug()<<"start read DB";
-//        sqlQuery = QSqlQuery(dataBase);
-//        fillingData();
-//        refreshList();
-//    }
-//    else qDebug()<<"error open DB";
+
 }
 
 
@@ -186,23 +187,21 @@ void MainWindow::on_lineEdit_textChanged(const QString &arg1)
 
 void MainWindow::on_search_city_clicked()
 {
-//обработчик запроса погоды по ID города
-    //27459
-    //api.openweathermap.org/data/2.5/weather?id={city id}&appid={your api key}
+//обработчик запроса погоды по названию города
     QNetworkAccessManager* manager = new QNetworkAccessManager(0);
     //Подключаем networkManager к обработчику ответа
     connect(manager, &QNetworkAccessManager::finished, this, &MainWindow::onResult);
-                                        //57.264586, 44.532377
     QString nameCity = ui->lbl_City->text();    //to take the name CITY
     ui->lbl_City->clear();                      //clear the input line
 
-    QString urlwithCity = "http://api.openweathermap.org/data/2.5/weather?id=27459&appid=f32fcd94d9aad60903d7702471434295";
+    QString urlwithCity = "http://api.openweathermap.org/data/2.5/weather?q="
+            + nameCity
+            +"&appid=f32fcd94d9aad60903d7702471434295";
     QUrl url(urlwithCity);
     QNetworkRequest request(url);
     //request.setRawHeader(QByteArray("APPID"),QByteArray("f32fcd94d9aad60903d7702471434295"));
 
     manager->get(request);  //Получаем данные, JSON файл с сайта по определённому url
-
 }
 
 void MainWindow::onResult(QNetworkReply *reply)
@@ -302,4 +301,19 @@ void MainWindow::createTableViewUi()
     //ui->tableViewBd->horizontalHeader()->setStretchLastSection(true);
     ui->tableViewBd->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     model->select(); // Делаем выборку данных из таблицы
+}
+
+void MainWindow::onAddWordCompleter()
+{
+    const QString text = ui->lbl_City->text().trimmed();
+    if( text.isEmpty() ) {
+        return;
+    }
+    //model->setFilter(text).isEmpty()
+//    if( !ui->listWidget->findItems( text, Qt::MatchFixedString ).isEmpty() ) {
+//        return;
+//    }
+//    model->setFilter(text);
+    ui->lbl_City->setText(text);
+    ui->lbl_City->clear();
 }

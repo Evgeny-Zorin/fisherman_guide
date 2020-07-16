@@ -14,6 +14,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
     classfish.cpp \
+    completerID.cpp \
     database.cpp \
     main.cpp \
     mainwindow.cpp \
@@ -21,6 +22,7 @@ SOURCES += \
 
 HEADERS += \
     classfish.h \
+    completerID.h \
     database.h \
     mainwindow.h \
     webclass.h

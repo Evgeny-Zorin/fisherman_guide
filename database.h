@@ -10,6 +10,7 @@
 #include <QDebug>
 #include <QDir>
 #include <QCoreApplication>
+#include <QMessageBox>
 
 
 //Директивы имен таблицы, полей таблицы и базы данных
