@@ -16,6 +16,7 @@
 #include <QScriptEngine>
 #include <QScriptContext>
 #include <QScriptValue>
+#include <QModelIndex>
 
 
 MainWindow::MainWindow(QWidget *parent)
@@ -26,8 +27,6 @@ MainWindow::MainWindow(QWidget *parent)
     list = new QStringList;
 
     connect(ui->actionExit, SIGNAL(triggered()), this, SLOT(close()));          //go to tray
-    connect(ui->pushButton, SIGNAL(clicked(bool)), SLOT(onAddWordCompleter()));
-
     qDebug() << QSslSocket::supportsSsl() << QSslSocket::sslLibraryBuildVersionString() << QSslSocket::sslLibraryVersionString();
 
     db = new DataBase();
@@ -35,13 +34,12 @@ MainWindow::MainWindow(QWidget *parent)
 
 //Инициализируем модель для представления данных с заданием названий колонок
     this->setupModelDb(TABLE,
-                     QStringList() << "id"
+                     QStringList() << "1"
                                    << "2"
                                    << "3"
                );
 //Инициализируем внешний вид таблицы с данными
     this->createTableViewUi();
-
 
      m_view = new QWebEngineView(this);
      QWebEnginePage *page = m_view->page();
@@ -101,90 +99,6 @@ void MainWindow::on_actionExit_triggered()
     QApplication::quit();
 }
 
-void MainWindow::on_actionOpen_DBase_triggered()
-{
-    pathDB = QFileDialog::getOpenFileName(this, "Open file", "", "*db");
-    dataBase = QSqlDatabase::addDatabase("QSQLITE");
-    dataBase.setDatabaseName(pathDB);
-    if(dataBase.open()) {
-        sqlQuery = QSqlQuery(dataBase);
-        fillingData();
-        refreshList();
-    }
-}
-
-void MainWindow::on_pushButton_clicked()
-{
-
-}
-
-
-void MainWindow::on_comboBoxTables_activated(int index)
-{
-    makeRequest();
-    addColumns();
-    addValue(0);
-    refreshList();
-}
-
-void MainWindow::on_comboBoxColumn_activated(int index)
-{
-    makeRequest();
-    addColumns();
-    addValue(index);
-    refreshList();
-}
-
-void MainWindow::fillingData()
-{
-    addTables();
-    makeRequest();
-    addColumns();
-    addValue(0);
-}
-//добавляем доступные таблицы
-void MainWindow::addTables()
-{
-    ui->comboBoxTables->clear();
-    for(const QString &tableName: dataBase.tables())
-        ui->comboBoxTables->addItem(tableName);
-}
-//запрос на выбранную пользователем таблицу
-void MainWindow::makeRequest()
-{
-        QString tableName = ui->comboBoxTables->currentText();
-        sqlQuery.exec("SELECT * FROM " + tableName + "");
-}
-//добавляем строки из выбранной таблицы
-void MainWindow::addColumns()
-{
-        ui->comboBoxColumn->clear();
-        int columnCount = sqlQuery.record().count();
-        for(int i = 0; i < columnCount; i++)
-            ui->comboBoxColumn->addItem(sqlQuery.record().field(i).name());
-}
-//добавляем значения выбранного столбца
-void MainWindow::addValue(int index)
-{
-        ui->listWidget->clear();
-        while(sqlQuery.next())
-            ui->listWidget->addItem(sqlQuery.value(index).toString());
-}
-
-void MainWindow::refreshList()
-{
-        list->clear();
-        for(int i = 0; i < ui->listWidget->count(); i++)
-            list->append(ui->listWidget->item(i)->text());
-}
-
-void MainWindow::on_lineEdit_textChanged(const QString &arg1)
-{
-    QRegExp regExp(arg1, Qt::CaseInsensitive, QRegExp::Wildcard);
-    ui->listWidget->clear();
-    ui->listWidget->addItems(list->filter(regExp));
-}
-
 void MainWindow::on_search_city_clicked()
 {
 //обработчик запроса погоды по названию города
@@ -233,7 +147,6 @@ void MainWindow::on_DockMapBtn_clicked()
     //Подключаем networkManager к обработчику ответа
     connect(manager, &QNetworkAccessManager::finished, this, &MainWindow::onResult);
                                         //57.264586, 44.532377
-    //api.openweathermap.org/data/2.5/weather?q={city name}&appid={your api key}
     QString nameCity = ui->lbl_City->text();    //to take the name CITY
     ui->lbl_City->clear();                      //clear the input line
 
@@ -252,6 +165,11 @@ void MainWindow::on_DockMapBtn_clicked()
     //request.setRawHeader(QByteArray("APPID"),QByteArray("f32fcd94d9aad60903d7702471434295"));
 
     manager->get(request);  //Получаем данные, JSON файл с сайта по определённому url
+}
+
+void MainWindow::changeForecast()
+{
+
 }
 //Метод для инициализации модели представления данных
 void MainWindow::setupModelDb(const QString &tableName, const QStringList &headers)
@@ -273,13 +191,12 @@ void MainWindow::setupModelDb(const QString &tableName, const QStringList &heade
     }
 
 //Устанавливаем названия колонок в таблице с сортировкой данных
-//        for(int i = 0, j = 0; i < model->columnCount(); i++, j++){
+//        for(int i = 0, j = 0; i < model->columnCount()+1; i++, j++){
 //            model->setHeaderData(i,Qt::Horizontal,headers[j]);
 //        }
 //Устанавливаем сортировку по возрастанию данных по нулевой колонке
     model->setSort(0,Qt::AscendingOrder);
-    //ui->comboBox->setModel(model);
-    //ui->comboBox->setModelColumn(1);
+    model->setEditStrategy(QSqlTableModel::OnManualSubmit);
     qDebug()<<" start setupModelDb  CLOSE";
 }
 
@@ -287,10 +204,14 @@ void MainWindow::createTableViewUi()
 {
     qDebug()<<" start createTableViewUi";
     ui->tableViewBd->setModel(model);     // Устанавливаем модель на TableView
-    //std::this_thread::sleep_for (std::chrono::seconds(5));
     ui->tableViewBd->setColumnHidden(0, true);    // Скрываем колонку с id записей
     ui->tableViewBd->setColumnHidden(3, true);
-    //ui->tableViewBd->setColumnHidden(4, true);
+    ui->tableViewBd->setColumnHidden(4, true);
+    ui->tableViewBd->setColumnHidden(5, true);
+    ui->tableViewBd->setColumnHidden(6, true);
+    ui->tableViewBd->setColumnHidden(7, true);
+    ui->tableViewBd->setColumnHidden(8, true);
+    ui->tableViewBd->setColumnHidden(9, true);
 // Разрешаем выделение строк
     ui->tableViewBd->setSelectionBehavior(QAbstractItemView::SelectRows);
 // Устанавливаем режим выделения лишь одно строки в таблице
@@ -301,6 +222,9 @@ void MainWindow::createTableViewUi()
     //ui->tableViewBd->horizontalHeader()->setStretchLastSection(true);
     ui->tableViewBd->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     model->select(); // Делаем выборку данных из таблицы
+    //model->setData(model->index(1,1),"3",Qt::EditRole);
+    //model->submitAll();
+
 }
 
 void MainWindow::onAddWordCompleter()

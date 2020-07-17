@@ -10,6 +10,7 @@ public:
 
 private:
     QString namefish;       //name of the fish
+    qint32  forecast;
     qint32 minactivtemp;    //minimum (water) temperature at which the fish is active
     qint32 maxactivtemp;    //maximum (water) temperature at which the fish is active
     qint32 minactivpress;   //minimum pressure at which the fish is active
@@ -17,6 +18,7 @@ private:
     QString areafish;       //fish habitat(river, lake, sea, ocean)
     QString typefish;       //freshwater or marine fish
     QString aboutfish;      //description of the fish
+
 public:
     QString getNameFish() const{return namefish;}
     QString getTypeFish() const{return typefish;}

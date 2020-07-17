@@ -35,27 +35,13 @@ public:
     ~MainWindow();
 
 private slots:
-
-    void on_pushButton_clicked();
-    void on_comboBoxTables_activated(int index);
-    void on_comboBoxColumn_activated(int index);
-    void on_lineEdit_textChanged(const QString &arg1);
-
     // Обработчик данных полученных от объекта QNetworkAccessManager
     void onResult(QNetworkReply *reply);//будет разбираться JSON файл при получении ответа от сайта с содержимым файла.
-    void on_actionOpen_DBase_triggered();
     void on_actionExit_triggered();
     void on_search_city_clicked();
 
     void on_DockMapBtn_clicked();
-
-private:
-    void fillingData();
-    void addTables();
-    void makeRequest();
-    void addColumns();
-    void addValue(int index);
-    void refreshList();
+    void changeForecast();  //обновляет прогноз клева
 
 private:
     Ui::MainWindow *ui;

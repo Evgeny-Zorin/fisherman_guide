@@ -18,6 +18,7 @@ SOURCES += \
     database.cpp \
     main.cpp \
     mainwindow.cpp \
+    weather.cpp \
     webclass.cpp
 
 HEADERS += \
@@ -25,6 +26,7 @@ HEADERS += \
     completerID.h \
     database.h \
     mainwindow.h \
+    weather.h \
     webclass.h
 
 FORMS += \
