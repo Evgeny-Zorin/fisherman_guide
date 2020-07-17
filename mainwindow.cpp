@@ -136,16 +136,17 @@ void MainWindow::onResult(QNetworkReply *reply)
 //          ui->textEdit->append(root.value("name").toString());
 //          ui->textEdit->append(QString::number(root.value("temp").toInt()));
             QJsonValue jv = root.value("main");
-
-           qDebug() << jv;
+            jv.toObject();
+           qDebug() << jv.toObject();
+           qDebug() << jv.toObject().value("temp");
             //то забираем массив из данного свойства
-             QJsonArray ja = jv.toArray();
-             qDebug() << ja;
-             // Перебирая все элементы массива
-             for(int i = 0; i < ja.count(); i++){
-                 QJsonObject subtree = ja.at(i).toObject();
-            qDebug() << "value:" << subtree.value("temp").toString();
-             }
+//             QJsonArray ja = jv.toArray();
+//             qDebug() << ja;
+//             // Перебирая все элементы массива
+//             for(int i = 0; i < ja.count(); i++){
+//                 QJsonObject subtree = ja.at(i).toObject();
+//            qDebug() << "value:" << subtree.value("temp").toString();
+//             }
 
 
     }
