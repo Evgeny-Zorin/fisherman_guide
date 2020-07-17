@@ -62,5 +62,7 @@ private:
     //completerID *completer;
 private slots:
     void onAddWordCompleter();
+public:
+    //QJsonValue findKey(const QString& key, const QJsonValue& value);
 };
 #endif // MAINWINDOW_H

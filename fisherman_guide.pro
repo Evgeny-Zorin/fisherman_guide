@@ -16,6 +16,7 @@ SOURCES += \
     classfish.cpp \
     completerID.cpp \
     database.cpp \
+    jsonparser.cpp \
     main.cpp \
     mainwindow.cpp \
     weather.cpp \
@@ -25,6 +26,7 @@ HEADERS += \
     classfish.h \
     completerID.h \
     database.h \
+    jsonparser.h \
     mainwindow.h \
     weather.h \
     webclass.h

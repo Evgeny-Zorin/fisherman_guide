@@ -120,26 +120,67 @@ void MainWindow::on_search_city_clicked()
 
 void MainWindow::onResult(QNetworkReply *reply)
 {
-    qDebug() << reply->error();
-    QByteArray bytes = reply->readAll();
-//       // QString string = reply->readAll();
-//               qDebug() << "reply == huntReplay: " << bytes;
+    // Если ошибки отсутсвуют
+    if(!reply->error()){
 
-    QJsonDocument jsonDocument(QJsonDocument::fromJson(bytes));
-    QString saveFileName = QFileDialog::getSaveFileName(this,
-                                                        tr("Save Json File"),
-                                                        QString(),
-                                                        tr("JSON (*.json)"));
-    QFile jsonFile(saveFileName);
-    if (!jsonFile.open(QIODevice::WriteOnly))
-    {
-        return;
+        // То создаём объект Json Document, считав в него все данные из ответа
+        QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
+
+        // Забираем из документа корневой объект
+        QJsonObject root = document.object();
+        /* Находим объект "departament", который располагается самым первым в корневом объекте.
+         * С помощью метода keys() получаем список всех объектов и по первому индексу
+         * забираем название объекта, по которому получим его значение
+         * */
+//          ui->textEdit->append(QString::number(root.value("timezone").toInt()));
+//          ui->textEdit->append(root.value("name").toString());
+//          ui->textEdit->append(QString::number(root.value("temp").toInt()));
+
+            QJsonValue value = root.value("main");
+        qDebug() << "value:" << value;
     }
+    reply->deleteLater();
 
-    // Write the current Json object to a file.
-    jsonFile.write(QJsonDocument(jsonDocument).toJson(QJsonDocument::Indented));
-    jsonFile.close();   // Close file
+
+//    qDebug() << reply->error();
+//    QByteArray bytes = reply->readAll();
+//    QJsonDocument jsonDocument(QJsonDocument::fromJson(bytes));
+//    QString saveFileName = QFileDialog::getSaveFileName(this,
+//                                                        tr("Save Json File"),
+//                                                        QString(),
+//                                                        tr("JSON (*.json)"));
+//    QFile jsonFile(saveFileName);
+//    if (!jsonFile.open(QIODevice::WriteOnly))
+//    {
+//        return;
+//    }
+
+//    // Write the current Json object to a file.
+//    jsonFile.write(QJsonDocument(jsonDocument).toJson(QJsonDocument::Indented));
+//    jsonFile.close();   // Close file
 }
+
+//QJsonValue findKey(const QString& key, const QJsonValue& value) {
+//    if (value.isObject()) {
+//        const QJsonObject obj = value.toObject();
+//        if (obj.contains(key))
+//            return obj.value(key);           // return 'early' if object contains key
+
+//        for (const auto& value : obj) {
+//            QJsonValue recurse = findKey(key, value);  // call itself, forwarding a value
+//            if (!recurse.isNull())
+//                return recurse;              // value found, return 'early'
+//        }
+//    } else if (value.isArray()) {
+//        for (const auto& value : value.toArray()) {
+//            QJsonValue recurse = findKey(key, value);
+//            if (!recurse.isNull())
+//                return recurse;
+//        }
+//    }
+
+//    return QJsonValue();          // base case: a null value
+//}
 
 void MainWindow::on_DockMapBtn_clicked()
 {
@@ -157,6 +198,7 @@ void MainWindow::on_DockMapBtn_clicked()
     QString urlwithCity = "http://api.openweathermap.org/data/2.5/weather?"
             "lat=" + lat +
             "&lon=" + lon +
+            "&units=metric" +
             "&appid=f32fcd94d9aad60903d7702471434295";
 
     //QString urlwithCity = "http://api.openweathermap.org/data/2.5/weather?q=" + nameCity + "&appid=f32fcd94d9aad60903d7702471434295";
