@@ -54,9 +54,8 @@ private:
     QString name;   //City name
     quint32 cod;    //Internal parameter
 
-
-
-
+public:
+        QString getname()const{return name;}
 
 };
 

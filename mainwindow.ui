@@ -27,10 +27,10 @@
    <widget class="QWidget" name="">
     <property name="geometry">
      <rect>
-      <x>45</x>
+      <x>20</x>
       <y>310</y>
-      <width>279</width>
-      <height>257</height>
+      <width>371</width>
+      <height>361</height>
      </rect>
     </property>
     <layout class="QGridLayout" name="gridLayout">
