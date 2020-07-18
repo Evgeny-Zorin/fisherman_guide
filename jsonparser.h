@@ -6,6 +6,7 @@
 #include <QFileDialog>
 #include <QJsonDocument>
 #include <QJsonObject>
+#include <QJsonArray>
 #include "weather.h"
 
 class jsonparser : public QObject
@@ -17,7 +18,7 @@ public:
 signals:
 public:
     void saveToDisk(QWidget* wgt, QNetworkReply *reply);
-    void parsWeather(QNetworkReply *reply, weather* wtr);
+    bool parsWeather(QNetworkReply *reply, weather* wtr);
 
 };
 

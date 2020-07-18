@@ -5,7 +5,7 @@ jsonparser::jsonparser(QObject *parent) : QObject(parent)
 
 }
 
-void jsonparser::parsWeather(QNetworkReply *reply, weather  *wtr)
+bool jsonparser::parsWeather(QNetworkReply *reply, weather  *wtr)
 {
     // Если ошибки отсутсвуют
     if(!reply->error()){
@@ -23,26 +23,44 @@ void jsonparser::parsWeather(QNetworkReply *reply, weather  *wtr)
         QJsonValue jvmain = root.value("main");
             if(jvmain.isObject()){
                QJsonObject jObjmain = jvmain.toObject();
-                qDebug() << jObjmain;
+//qDebug() << jObjmain;
                 wtr->setmainTemp(jObjmain.value("temp").toDouble());
                 wtr->setmainHumidity(jObjmain.value("humidity").toInt());
                 wtr->setmainPressure(jObjmain.value("pressure").toDouble());
                 wtr->setmainGrnd_level(jObjmain.value("grnd_level").toDouble());
+                wtr->setmainHumidity(jObjmain.value("humidity").toInt());
                 qDebug() << "wtr->setmainTemp: "<<wtr->getmainTemp();
             }
         QJsonValue jvweather = root.value("weather");
-            if(jvweather.isObject()){
-                QJsonObject jObjweather = jvweather.toObject();
-                wtr->setweatherMain(jObjweather.value("main").toString());
-                //need add description
+            if(jvweather.isArray()){
+                QJsonArray  jArrweather = jvweather.toArray();
+                for(int i = 0; i < jArrweather.count(); i++){
+                    //qDebug() << "jArrweather.count() "<< jArrweather.count();
+                    QJsonObject subtree =jArrweather.at(i).toObject();
+                    qDebug() << subtree.value(subtree.keys().at(i)).toString();
+                    //if(subtree.value(subtree.keys().at(i)).toString() == "description")
+                        wtr->setweatherDescription(subtree.value(subtree.keys().at(i)).toString());
+                        wtr->setweatherMain(subtree.value(subtree.keys().at(i)).toString());
+                    qDebug() << wtr->getweatherDescription();
+                }
             }
         QJsonValue jvname = root.value("name");
             if(!jvname.isNull()){
                 wtr->setnameCity(jvname.toString());
                 qDebug()<< "wtr->setnameCity: "<< wtr->getnameCity();
             }
+        QJsonValue jvsys = root.value("sys");
+//qDebug()<<jvsys;
+            if(jvsys.isObject()){
+                QJsonObject jObjcountry = jvsys.toObject();
+                wtr->setsysCountry(jObjcountry.value("country").toString());
+                qDebug()<<"country: "<<wtr->getsysCountry();
+                //need add description
+            }
+            return true;
     }
     reply->deleteLater();
+    return false;
 }
 
 void jsonparser::saveToDisk(QWidget* wgt, QNetworkReply *reply)

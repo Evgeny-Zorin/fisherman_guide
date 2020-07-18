@@ -57,10 +57,15 @@ private:
 public:
 //Getters group
         QString getnameCity()const {return nameCity;}
+        QString getsysCountry()const {return sysCountry;}
+        QString getweatherMain()const {return weatherMain;}
+        QString getweatherDescription()const {return weatherDescription;}
         double getmainTemp()const {return  mainTemp;}
         double getmainPressure()const {return mainPressure;}
-        QString getweatherMain()const {return weatherMain;}
         double getmainGrnd_level()const{return mainGrnd_level;}
+        int getmainHumidity()const {return mainHumidity;}
+
+
 //Setters group
         void setcoordLon(double lon){coordLon =lon;}
         void setcoordLat(double lat){coordLat = lat;}
@@ -70,6 +75,8 @@ public:
         void setmainPressure(double pr){mainPressure = pr;}
         void setmainHumidity(int hum){mainHumidity = hum;}
         void setmainGrnd_level(double lvl){mainGrnd_level = lvl;}
+        void setsysCountry(QString country){sysCountry = country;}
+        void setweatherDescription(QString Des){weatherDescription = Des;}
 
 };
 

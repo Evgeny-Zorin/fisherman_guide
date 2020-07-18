@@ -128,12 +128,15 @@ void MainWindow::on_search_city_clicked()
 void MainWindow::onResult(QNetworkReply *reply)
 {
     //jparserObj->saveToDisk(this, reply);
-    jparserObj->parsWeather(reply, weatherObj);
-    forecastObj->makeanalysis(weatherObj, model);
-    ui->lbl_cityHead->setText(weatherObj->getnameCity());
-    ui->lblTempValue->setText(QString::number(weatherObj->getmainTemp()));
-    ui->lblPressureValue->setText(QString::number(weatherObj->getmainGrnd_level()));
-    ui->lblCloudinessValue->setText(weatherObj->getweatherMain());
+    if (jparserObj->parsWeather(reply, weatherObj)){
+        forecastObj->makeanalysis(weatherObj, model);
+        ui->lbl_cityHead->setText(weatherObj->getnameCity());
+        ui->lblTempValue->setText(QString::number(weatherObj->getmainTemp()) + " С");
+        ui->lblHumidityValue->setText(QString::number(weatherObj->getmainHumidity()) + " %");
+        //ui->lblPressureValue->setText(QString::number(weatherObj->getmainGrnd_level()));
+        ui->lblCloudinessValue->setText(weatherObj->getweatherMain());
+        ui->lblCountry->setText(weatherObj->getsysCountry());
+    }
 }
 
 void MainWindow::on_DockMapBtn_clicked()
