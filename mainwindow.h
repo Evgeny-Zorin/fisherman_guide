@@ -13,6 +13,7 @@
 #include <QCompleter>
 #include "database.h"
 #include "webclass.h"
+#include "jsonparser.h"
 //#include "completerID.h"
 
 QT_BEGIN_NAMESPACE
@@ -52,6 +53,9 @@ private:
 private:
     DataBase        *db;       //объект для взаимодействия с бд
     QSqlTableModel  *model;    //модель представления таблицы базы данных
+private:
+    jsonparser* jparser;        //объект класса парсера
+    weather* weatherObj;           //объект класса погода
 private:
     void setupModelDb(const QString &tableName, const QStringList &headers);
     void createTableViewUi();    //формирует вид TableView
