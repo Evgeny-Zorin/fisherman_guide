@@ -26,16 +26,15 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    list = new QStringList;
-
     connect(ui->actionExit, SIGNAL(triggered()), this, SLOT(close()));          //go to tray
     qDebug() << QSslSocket::supportsSsl() << QSslSocket::sslLibraryBuildVersionString() << QSslSocket::sslLibraryVersionString();
 
     db = new DataBase();
     db->connectToDataBase();
 
-    jparser = new jsonparser(); //выделение памяти под объект-парсер
+    jparserObj = new jsonparser();  //выделение памяти под объект-парсер
     weatherObj = new weather();     //выделение памяти под объект-погода
+    forecastObj = new forecast();   //выделение памяти под объект-анализатор
 
 //Инициализируем модель для представления данных с заданием названий колонок
     this->setupModelDb(TABLE,
@@ -116,7 +115,8 @@ void MainWindow::on_search_city_clicked()
     ui->lbl_City->clear();                      //clear the input line
 
     QString urlwithCity = "http://api.openweathermap.org/data/2.5/weather?q="
-            + nameCity
+            + nameCity +
+            "&units=metric" +
             +"&appid=f32fcd94d9aad60903d7702471434295";
     QUrl url(urlwithCity);
     QNetworkRequest request(url);
@@ -127,8 +127,13 @@ void MainWindow::on_search_city_clicked()
 
 void MainWindow::onResult(QNetworkReply *reply)
 {
-    jparser->saveToDisk(this, reply);
-    jparser->parsWeather(reply, weatherObj);
+    //jparserObj->saveToDisk(this, reply);
+    jparserObj->parsWeather(reply, weatherObj);
+    forecastObj->makeanalysis(weatherObj, model);
+    ui->lbl_cityHead->setText(weatherObj->getnameCity());
+    ui->lblTempValue->setText(QString::number(weatherObj->getmainTemp()));
+    ui->lblPressureValue->setText(QString::number(weatherObj->getmainGrnd_level()));
+    ui->lblCloudinessValue->setText(weatherObj->getweatherMain());
 }
 
 void MainWindow::on_DockMapBtn_clicked()
@@ -215,7 +220,6 @@ void MainWindow::createTableViewUi()
     model->select(); // Делаем выборку данных из таблицы
     //model->setData(model->index(1,1),"3",Qt::EditRole);
     //model->submitAll();
-
 }
 
 void MainWindow::onAddWordCompleter()

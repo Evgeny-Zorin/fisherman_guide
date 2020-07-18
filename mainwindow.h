@@ -14,6 +14,7 @@
 #include "database.h"
 #include "webclass.h"
 #include "jsonparser.h"
+#include "forecast.h"
 //#include "completerID.h"
 
 QT_BEGIN_NAMESPACE
@@ -27,7 +28,7 @@ class MainWindow : public QMainWindow
     QSqlDatabase dataBase;
     QSqlQuery sqlQuery;
     QString pathDB;
-    QStringList* list;
+    //QStringList* listheadermodel;
 private:
     QString AppID;
 
@@ -54,8 +55,9 @@ private:
     DataBase        *db;       //объект для взаимодействия с бд
     QSqlTableModel  *model;    //модель представления таблицы базы данных
 private:
-    jsonparser* jparser;        //объект класса парсера
-    weather* weatherObj;           //объект класса погода
+    jsonparser* jparserObj;     //объект класса парсера
+    weather* weatherObj;        //объект класса погода
+    forecast* forecastObj;      //объект класса-анализатора улова
 private:
     void setupModelDb(const QString &tableName, const QStringList &headers);
     void createTableViewUi();    //формирует вид TableView

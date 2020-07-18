@@ -5,6 +5,46 @@ jsonparser::jsonparser(QObject *parent) : QObject(parent)
 
 }
 
+void jsonparser::parsWeather(QNetworkReply *reply, weather  *wtr)
+{
+    // Если ошибки отсутсвуют
+    if(!reply->error()){
+        // То создаём объект Json Document, считав в него все данные из ответа
+        QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
+        // Забираем из документа корневой объект
+        QJsonObject root = document.object();
+
+        QJsonValue jvcoords = root.value("coord");
+            if(jvcoords.isObject()){
+                 QJsonObject jObjcoords = jvcoords.toObject();
+                 wtr->setcoordLon(jObjcoords.value("lon").toDouble());
+                 wtr->setcoordLat(jObjcoords.value("lat").toDouble());
+            }
+        QJsonValue jvmain = root.value("main");
+            if(jvmain.isObject()){
+               QJsonObject jObjmain = jvmain.toObject();
+                qDebug() << jObjmain;
+                wtr->setmainTemp(jObjmain.value("temp").toDouble());
+                wtr->setmainHumidity(jObjmain.value("humidity").toInt());
+                wtr->setmainPressure(jObjmain.value("pressure").toDouble());
+                wtr->setmainGrnd_level(jObjmain.value("grnd_level").toDouble());
+                qDebug() << "wtr->setmainTemp: "<<wtr->getmainTemp();
+            }
+        QJsonValue jvweather = root.value("weather");
+            if(jvweather.isObject()){
+                QJsonObject jObjweather = jvweather.toObject();
+                wtr->setweatherMain(jObjweather.value("main").toString());
+                //need add description
+            }
+        QJsonValue jvname = root.value("name");
+            if(!jvname.isNull()){
+                wtr->setnameCity(jvname.toString());
+                qDebug()<< "wtr->setnameCity: "<< wtr->getnameCity();
+            }
+    }
+    reply->deleteLater();
+}
+
 void jsonparser::saveToDisk(QWidget* wgt, QNetworkReply *reply)
 {
     // Если ошибки отсутсвуют
@@ -27,27 +67,6 @@ void jsonparser::saveToDisk(QWidget* wgt, QNetworkReply *reply)
     jsonFile.close();   // Close file
     }
 }
-
-void jsonparser::parsWeather(QNetworkReply *reply, weather  *wtr)
-{
-    // Если ошибки отсутсвуют
-    if(!reply->error()){
-        // То создаём объект Json Document, считав в него все данные из ответа
-        QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
-        // Забираем из документа корневой объект
-        QJsonObject root = document.object();
-            QJsonValue jv = root.value("main");
-            jv.toObject();
-           qDebug() << jv.toObject();
-           qDebug() << jv.toObject().value("temp");
-            //то забираем массив из данного свойства
-
-
-
-    }
-    reply->deleteLater();
-}
-
 
 //QJsonValue findKey(const QString& key, const QJsonValue& value) {
 //    if (value.isObject()) {
