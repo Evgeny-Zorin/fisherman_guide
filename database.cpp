@@ -10,11 +10,11 @@ DataBase::~DataBase()
 
 void DataBase::connectToDataBase()
 {
-    qDebug()<<" work connectToDataBase";
+    //qDebug()<<" work connectToDataBase";
 //Перед подключением к базе данных производим проверку на её существование.
 //В зависимости от результата производим открытие базы данных или её восстановление из копии
     pathDb = QCoreApplication::applicationDirPath() + QDir::separator() + DATABASE_NAME;
-    qDebug()<< "pathDb: " << pathDb;
+    //qDebug()<< "pathDb: " << pathDb;
     if(!QFile(pathDb).exists()){
         this->restoreDataBase();
     } else {
@@ -25,7 +25,7 @@ void DataBase::connectToDataBase()
 //Методы восстановления базы данных
 bool DataBase::restoreDataBase()
 {
-    qDebug()<<" work restoreDataBase";
+    //qDebug()<<" work restoreDataBase";
     if(this->openDataBase()){
         if(!this->backupTableOpen()){
             return false;
@@ -42,7 +42,7 @@ bool DataBase::restoreDataBase()
 //Метод для открытия базы данных
 bool DataBase::openDataBase()
 {
-    qDebug()<<" work openDataBase";
+    //qDebug()<<" work openDataBase";
 //База данных открывается по заданному пути
 //и имени базы данных, если она существует
     db = QSqlDatabase::addDatabase("QSQLITE");
@@ -62,7 +62,7 @@ bool DataBase::openDataBase()
 //Метод закрытия базы данных
 void DataBase::closeDataBase()
 {
-    qDebug()<<" work closeDataBase";
+    //qDebug()<<" work closeDataBase";
     db.close();
 }
 

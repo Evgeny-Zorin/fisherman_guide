@@ -17,8 +17,9 @@
 #include <QScriptContext>
 #include <QScriptValue>
 #include <QModelIndex>
-
-#include <QTreeView>
+#include <QEvent>
+#include <QCloseEvent>
+//#include <QTreeView>
 
 
 MainWindow::MainWindow(QWidget *parent)
@@ -26,7 +27,8 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    connect(ui->actionExit, SIGNAL(triggered()), this, SLOT(close()));          //go to tray
+    pathApp = QCoreApplication::applicationDirPath();
+    //this->setWindowIcon("qrc:/resource/img/img1.png");
     qDebug() << QSslSocket::supportsSsl() << QSslSocket::sslLibraryBuildVersionString() << QSslSocket::sslLibraryVersionString();
 
     db = new DataBase();
@@ -91,6 +93,21 @@ MainWindow::MainWindow(QWidget *parent)
         completer->setCaseSensitivity( Qt::CaseInsensitive );
         ui->FindFish->setCompleter(completer);
         m_view->hide();
+
+        //~~~~~~~~
+        trayIcon = new QSystemTrayIcon(this);                                       //icon initialization
+        trayIcon->setIcon(this->style()->standardIcon(QStyle::SP_ComputerIcon));    //selected a standard image
+        trayIcon->setToolTip(tr("Program works in the system tray."));              //Работа со сворачиванием программы трей
+        QAction * viewWindow = new QAction(tr("Maximize the window"), this);        //action Expand the window
+        connect(viewWindow, SIGNAL(triggered()), this, SLOT(show()));               //return from the tray
+        //ui->menuSettings->addAction(viewWindow);
+
+        trayIcon->show();       //showing the app icon in the tray
+        connect(trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)),
+                this, SLOT(iconActivated(QSystemTrayIcon::ActivationReason)));      //connecting the icon click signal to the handler
+        connect(ui->actionExit, SIGNAL(triggered()), this, SLOT(close()));          //go to tray
+
+        readSettings();
 }
 
 MainWindow::~MainWindow()
@@ -100,9 +117,48 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::on_actionExit_triggered()
+void MainWindow::closeEvent(QCloseEvent *event)
 {
-    QApplication::quit();
+    qDebug()<<"MainWindow::closeEvent ";
+    //If the window is visible and the checkbox is checked, then the application isn't terminated
+    //the window is simply hidden, which is accompanied by
+    //corresponding pop-up message
+    if(this->isVisible() && ui->actionTrayIcon->isChecked())
+    {
+        qDebug()<<"isVisible";
+        event->setAccepted(false);  //disable closing of the window
+        this->hide();               //to hide the window
+        QSystemTrayIcon::MessageIcon icon = QSystemTrayIcon::MessageIcon(QSystemTrayIcon::Information);
+
+        trayIcon->showMessage("MyClockWindow",
+                              tr("The app is minimized to the tray. "
+                                 "To expand the app window, click the app icon in the tray!"),
+                              icon,
+                              300);
+    }
+   else
+    {
+       writeSettings();
+        }
+}
+
+void MainWindow::changeEvent(QEvent *event)
+{
+    if(event->type() == QEvent::LanguageChange)
+    {
+        ui->retranslateUi(this);
+    }
+    else
+    QMainWindow::changeEvent(event);
+}
+
+void MainWindow::changeTranslator(QString postfix)
+{
+    QApplication::removeTranslator(translator); //disabling the current translator
+    translator = new QTranslator(this);
+    translator->load(QApplication::applicationName() + "_" + postfix); //uploading a new dictionary
+    QApplication::installTranslator(translator);    //connecting a translator with a new dictionary
+    //ui->statusBar->showMessage(tr("Current Language changed to %1").arg(postfix));
 }
 
 void MainWindow::on_search_city_clicked()
@@ -141,6 +197,7 @@ void MainWindow::onResult(QNetworkReply *reply)
 
 void MainWindow::on_DockMapBtn_clicked()
 {
+    //qDebug() <<"on_DockMapBtn_clicked";
     QNetworkAccessManager* manager = new QNetworkAccessManager(0);
     //Подключаем networkManager к обработчику ответа
     connect(manager, &QNetworkAccessManager::finished, this, &MainWindow::onResult);
@@ -173,7 +230,7 @@ void MainWindow::changeForecast()
 //Метод для инициализации модели представления данных
 void MainWindow::setupModelDb(const QString &tableName, const QStringList &headers)
 {
-    qDebug()<<" start setupModelDb";
+    //qDebug()<<" start setupModelDb";
 //Производим инициализацию модели представления данных
 //с установкой имени таблицы в базе данных, по которому
 //будет производится обращение в таблице
@@ -196,12 +253,12 @@ void MainWindow::setupModelDb(const QString &tableName, const QStringList &heade
 //Устанавливаем сортировку по возрастанию данных по нулевой колонке
     model->setSort(0,Qt::AscendingOrder);
     model->setEditStrategy(QSqlTableModel::OnManualSubmit);
-    qDebug()<<" start setupModelDb  CLOSE";
+    //qDebug()<<" start setupModelDb  CLOSE";
 }
 
 void MainWindow::createTableViewUi()
 {
-    qDebug()<<" start createTableViewUi";
+    //qDebug()<<" start createTableViewUi";
     ui->tableViewBd->setModel(model);             // Устанавливаем модель на TableView
     ui->tableViewBd->setColumnHidden(0, true);    // Скрываем колонку с id записей
     ui->tableViewBd->setColumnHidden(3, true);
@@ -225,6 +282,26 @@ void MainWindow::createTableViewUi()
     //model->submitAll();
 }
 
+void MainWindow::writeSettings()
+{
+    //qDebug()<<"writeSettings";
+    QSettings settings(pathApp + QDir::separator() + "settins.ini", QSettings::IniFormat);
+    settings.beginGroup("MyClockWindow");
+    settings.setValue("size", size());
+    settings.setValue("state", saveState());
+    settings.endGroup();
+}
+
+void MainWindow::readSettings()
+{
+    //qDebug()<<"readSettings";
+    QSettings settings(pathApp + QDir::separator() + "settins.ini", QSettings::IniFormat);
+    settings.beginGroup("MyClockWindow");
+    resize(settings.value("size").toSize());
+    restoreState(settings.value("state").toByteArray());
+    settings.endGroup();
+}
+
 void MainWindow::onAddWordCompleter()
 {
     const QString text = ui->lbl_City->text().trimmed();
@@ -238,4 +315,39 @@ void MainWindow::onAddWordCompleter()
 //    model->setFilter(text);
     ui->lbl_City->setText(text);
     ui->lbl_City->clear();
+}
+
+void MainWindow::on_lbl_City_returnPressed()
+{
+    on_search_city_clicked();
+}
+
+void MainWindow::on_actionEn_English_triggered()
+{
+    changeTranslator("en_EN");
+}
+
+void MainWindow::on_actionRu_Russian_triggered()
+{
+    changeTranslator("ru_RU");
+}
+
+void MainWindow::iconActivated(QSystemTrayIcon::ActivationReason reason)
+{
+    qDebug()<<"iconActivated";
+    switch (reason)
+    {
+    case QSystemTrayIcon::Trigger:      //The event is ignored if the checkbox is not selected
+        if(ui->actionTrayIcon->isChecked())
+        {
+            if(!this->isVisible()){
+                this->show();           //if hidden, it opens to the screen
+            } else {
+                this->hide();           //if the window is visible, it is hidden,
+            }
+        }
+        break;
+    default:
+        break;
+    }
 }

@@ -13,38 +13,23 @@
   <property name="windowTitle">
    <string>Fisherman guide</string>
   </property>
+  <property name="windowIcon">
+   <iconset>
+    <normaloff>:/resource/img/img1.png</normaloff>:/resource/img/img1.png</iconset>
+  </property>
   <widget class="QWidget" name="centralWidget">
    <layout class="QGridLayout" name="gridLayout_3">
     <item row="0" column="0">
      <layout class="QVBoxLayout" name="verticalLayout">
       <item>
        <layout class="QGridLayout" name="gridLayout">
-        <item row="3" column="1">
-         <widget class="QLabel" name="lblTemp">
-          <property name="text">
-           <string>Temperature:</string>
-          </property>
-         </widget>
-        </item>
-        <item row="7" column="0" colspan="3">
-         <widget class="QLabel" name="label">
-          <property name="text">
-           <string>Прогноз погоды по названию города:</string>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="0">
-         <widget class="QLabel" name="lbl2">
-          <property name="text">
-           <string>City:</string>
-          </property>
-         </widget>
-        </item>
-        <item row="3" column="2">
-         <widget class="QLabel" name="lblTempValue">
+        <item row="1" column="2">
+         <widget class="QLabel" name="lblCountry">
           <property name="font">
            <font>
             <pointsize>10</pointsize>
+            <weight>75</weight>
+            <bold>true</bold>
            </font>
           </property>
           <property name="text">
@@ -52,6 +37,30 @@
           </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item row="5" column="1">
+         <widget class="QLabel" name="lblCloudiness">
+          <property name="text">
+           <string>Cloudiness:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="8" column="0" colspan="2">
+         <widget class="QLineEdit" name="lbl_City">
+          <property name="placeholderText">
+           <string>Enter city name</string>
+          </property>
+          <property name="clearButtonEnabled">
+           <bool>false</bool>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="0">
+         <widget class="QLabel" name="lblSearchFish">
+          <property name="text">
+           <string>Search fish:</string>
           </property>
          </widget>
         </item>
@@ -69,7 +78,24 @@
            <string>-----</string>
           </property>
           <property name="alignment">
-           <set>Qt::AlignCenter</set>
+           <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item row="4" column="1">
+         <widget class="QLabel" name="lblHumidity">
+          <property name="text">
+           <string>Humidity:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1" colspan="2">
+         <widget class="QLineEdit" name="FindFish"/>
+        </item>
+        <item row="1" column="0">
+         <widget class="QLabel" name="lbl2">
+          <property name="text">
+           <string>City:</string>
           </property>
          </widget>
         </item>
@@ -98,41 +124,10 @@
           </property>
          </widget>
         </item>
-        <item row="8" column="0" colspan="2">
-         <widget class="QLineEdit" name="lbl_City">
-          <property name="placeholderText">
-           <string>Enter city name</string>
-          </property>
-         </widget>
-        </item>
-        <item row="8" column="2">
-         <widget class="QPushButton" name="search_city">
+        <item row="3" column="1">
+         <widget class="QLabel" name="lblTemp">
           <property name="text">
-           <string>search</string>
-          </property>
-         </widget>
-        </item>
-        <item row="4" column="1">
-         <widget class="QLabel" name="lblHumidity">
-          <property name="text">
-           <string>Humidity:</string>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="1" colspan="2">
-         <widget class="QLineEdit" name="FindFish"/>
-        </item>
-        <item row="0" column="0">
-         <widget class="QLabel" name="lblSearchFish">
-          <property name="text">
-           <string>Search fish:</string>
-          </property>
-         </widget>
-        </item>
-        <item row="5" column="1">
-         <widget class="QLabel" name="lblCloudiness">
-          <property name="text">
-           <string>Cloudiness:</string>
+           <string>Temperature:</string>
           </property>
          </widget>
         </item>
@@ -151,6 +146,13 @@
           </property>
          </widget>
         </item>
+        <item row="8" column="2">
+         <widget class="QPushButton" name="search_city">
+          <property name="text">
+           <string>search</string>
+          </property>
+         </widget>
+        </item>
         <item row="3" column="0">
          <widget class="QLabel" name="lblWeatherRep">
           <property name="text">
@@ -158,13 +160,11 @@
           </property>
          </widget>
         </item>
-        <item row="1" column="2">
-         <widget class="QLabel" name="lblCountry">
+        <item row="3" column="2">
+         <widget class="QLabel" name="lblTempValue">
           <property name="font">
            <font>
             <pointsize>10</pointsize>
-            <weight>75</weight>
-            <bold>true</bold>
            </font>
           </property>
           <property name="text">
@@ -172,6 +172,13 @@
           </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item row="7" column="0" colspan="3">
+         <widget class="QLabel" name="label">
+          <property name="text">
+           <string>Прогноз погоды по названию города:</string>
           </property>
          </widget>
         </item>
@@ -192,7 +199,7 @@
       </property>
       <property name="sizeHint" stdset="0">
        <size>
-        <width>40</width>
+        <width>10</width>
         <height>20</height>
        </size>
       </property>
@@ -213,7 +220,6 @@
     <property name="title">
      <string>File</string>
     </property>
-    <addaction name="actionOpen_DBase"/>
     <addaction name="actionExit"/>
    </widget>
    <widget class="QMenu" name="menuLanguage">
@@ -222,7 +228,6 @@
     </property>
     <addaction name="actionEn_English"/>
     <addaction name="actionRu_Russian"/>
-    <addaction name="action"/>
    </widget>
    <widget class="QMenu" name="menuAbout">
     <property name="title">
@@ -234,10 +239,17 @@
      <string>AppID</string>
     </property>
    </widget>
+   <widget class="QMenu" name="menuSettings">
+    <property name="title">
+     <string>Settings</string>
+    </property>
+    <addaction name="actionTrayIcon"/>
+   </widget>
    <addaction name="menuFile"/>
-   <addaction name="menuAbout"/>
+   <addaction name="menuSettings"/>
    <addaction name="menuLanguage"/>
    <addaction name="menuAppID"/>
+   <addaction name="menuAbout"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <widget class="QToolBar" name="mainToolBar">
@@ -310,14 +322,21 @@
     <string>Exit</string>
    </property>
   </action>
-  <action name="actionOpen_DBase">
-   <property name="text">
-    <string>Open DBase</string>
+  <action name="actionTrayIcon">
+   <property name="checkable">
+    <bool>true</bool>
    </property>
-  </action>
-  <action name="action">
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
    <property name="text">
-    <string>пишу тут</string>
+    <string>TrayIcon</string>
+   </property>
+   <property name="iconVisibleInMenu">
+    <bool>true</bool>
    </property>
   </action>
  </widget>

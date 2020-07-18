@@ -12,6 +12,12 @@ CONFIG += c++11
 
 DEFINES += QT_DEPRECATED_WARNINGS
 
+VERSION = 7.7.7.7
+QMAKE_TARGET_COMPANY = Zorin Co
+QMAKE_TARGET_PRODUCT = FisherMan Guide
+QMAKE_TARGET_DESCRIPTION = The best program in the world!!!
+QMAKE_TARGET_COPYRIGHT = Zorin Evgeny
+
 SOURCES += \
     classfish.cpp \
     completerID.cpp \

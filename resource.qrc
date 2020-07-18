@@ -4,6 +4,7 @@
         <file>resource/js_yaMap/js/mapbasics+reverse_geocode.js</file>
         <file>resource/qwebchannel.js</file>
         <file>resource/qtconnector.js</file>
+        <file>resource/img/img1.png</file>
     </qresource>
     <qresource prefix="/rec"/>
 </RCC>
