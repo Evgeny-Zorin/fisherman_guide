@@ -32,31 +32,16 @@ void jsonparser::parsWeather(QNetworkReply *reply, weather  *wtr)
 {
     // Если ошибки отсутсвуют
     if(!reply->error()){
-
         // То создаём объект Json Document, считав в него все данные из ответа
         QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
-
         // Забираем из документа корневой объект
         QJsonObject root = document.object();
-        /* Находим объект "departament", который располагается самым первым в корневом объекте.
-         * С помощью метода keys() получаем список всех объектов и по первому индексу
-         * забираем название объекта, по которому получим его значение
-         * */
-//          ui->textEdit->append(QString::number(root.value("timezone").toInt()));
-//          ui->textEdit->append(root.value("name").toString());
-//          ui->textEdit->append(QString::number(root.value("temp").toInt()));
             QJsonValue jv = root.value("main");
             jv.toObject();
            qDebug() << jv.toObject();
            qDebug() << jv.toObject().value("temp");
             //то забираем массив из данного свойства
-//             QJsonArray ja = jv.toArray();
-//             qDebug() << ja;
-//             // Перебирая все элементы массива
-//             for(int i = 0; i < ja.count(); i++){
-//                 QJsonObject subtree = ja.at(i).toObject();
-//            qDebug() << "value:" << subtree.value("temp").toString();
-//             }
+
 
 
     }

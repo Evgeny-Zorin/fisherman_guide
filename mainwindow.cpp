@@ -18,6 +18,8 @@
 #include <QScriptValue>
 #include <QModelIndex>
 
+#include <QTreeView>
+
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -125,6 +127,7 @@ void MainWindow::on_search_city_clicked()
 
 void MainWindow::onResult(QNetworkReply *reply)
 {
+    jparser->saveToDisk(this, reply);
     jparser->parsWeather(reply, weatherObj);
 }
 

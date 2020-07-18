@@ -56,6 +56,8 @@ private:
 
 public:
         QString getname()const{return name;}
+        void setcoordLon(double lon){coordLon =lon;}
+        void setcoordLat(double lat){coordLat = lat;}
 
 };
 
