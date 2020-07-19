@@ -15,10 +15,12 @@ void MessegeController::sockReady()
         dataChat = socket->readAll();
         //qDebug() << data;
         docChat = QJsonDocument::fromJson(dataChat, &docChatError);
+        //qDebug() << docChat;
         if (docChatError.errorString().toInt() == QJsonParseError::NoError){
             if((docChat.object().value("type").toString() == "connect") &&
                 (docChat.object().value("status").toString() == "True")){
                 //QMessageBox::information(this, tr("Information"), tr("Connection completed."));
+                //qDebug() << docChat.object().value("result").toString();
                 qDebug()<< tr("Connection completed.");
             }
             else if (docChat.object().value("type").toString() == "resultSelect"){
@@ -28,7 +30,7 @@ void MessegeController::sockReady()
                 for(int i = 0; i < docArr.count(); i++){
                     QStandardItem* col = new QStandardItem(docArr[i].toObject().value("time").toString());
                     model->appendRow(col);
-                }
+                }//устанавливаю модель в таблицу главного окна
                 tblChat->setModel(model);
             }
             else{

@@ -1,6 +1,8 @@
 #ifndef MESSEGECONTROLLER_H
 #define MESSEGECONTROLLER_H
 
+
+
 #include <QObject>
 #include <QTcpSocket>
 #include <QMessageBox>
