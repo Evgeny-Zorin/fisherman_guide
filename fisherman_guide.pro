@@ -26,6 +26,7 @@ SOURCES += \
     jsonparser.cpp \
     main.cpp \
     mainwindow.cpp \
+    messegecontroller.cpp \
     weather.cpp \
     webclass.cpp
 
@@ -36,6 +37,7 @@ HEADERS += \
     forecast.h \
     jsonparser.h \
     mainwindow.h \
+    messegecontroller.h \
     weather.h \
     webclass.h
 

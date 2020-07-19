@@ -13,10 +13,13 @@
 #include <QCompleter>
 #include <QTranslator>
 #include <QSystemTrayIcon>
+#include <QTableView>
+#include <QLineEdit>
 #include "database.h"
 #include "webclass.h"
 #include "jsonparser.h"
 #include "forecast.h"
+#include "messegecontroller.h"
 //#include "completerID.h"
 
 QT_BEGIN_NAMESPACE
@@ -54,6 +57,14 @@ private slots:
     void on_actionEn_English_triggered();
     void on_actionRu_Russian_triggered();
     void iconActivated(QSystemTrayIcon::ActivationReason reason);   //show tray
+    void on_actionAbout_triggered();
+
+    void on_btnPull_clicked();
+
+    void on_btbSend_clicked();
+
+    void on_btnClear_clicked();
+
 private:
     Ui::MainWindow *ui;
     QNetworkAccessManager *networkManager;
@@ -69,6 +80,10 @@ private:
     jsonparser* jparserObj;     //объект класса парсера
     weather* weatherObj;        //объект класса погода
     forecast* forecastObj;      //объект класса-анализатора улова
+private:
+    QTableView* tblChat;
+    QLineEdit* lnChat;
+    MessegeController* MsgController;
 private:
     void setupModelDb(const QString &tableName, const QStringList &headers);
     void createTableViewUi();    //формирует вид TableView

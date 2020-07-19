@@ -107,6 +107,16 @@ MainWindow::MainWindow(QWidget *parent)
                 this, SLOT(iconActivated(QSystemTrayIcon::ActivationReason)));      //connecting the icon click signal to the handler
         connect(ui->actionExit, SIGNAL(triggered()), this, SLOT(close()));          //go to tray
 
+        //tblChat = new QTableView();
+        tblChat = ui->tblChat;  //получаю указатель на таблицу чата
+        //lnChat = new QLineEdit();
+        lnChat = ui->lineMessege;
+
+        MsgController = new MessegeController();
+        //MsgController->socket->connectToHost("127.0.0.1",7777);
+        //передаю в класс контроллер указатели для работы с UI
+        MsgController->setPtrLineChat(lnChat);
+        MsgController->setPtrTableChat(tblChat);
         readSettings();
 }
 
@@ -251,7 +261,7 @@ void MainWindow::setupModelDb(const QString &tableName, const QStringList &heade
 //            model->setHeaderData(i,Qt::Horizontal,headers[j]);
 //        }
 //Устанавливаем сортировку по возрастанию данных по нулевой колонке
-    model->setSort(0,Qt::AscendingOrder);
+    model->setSort(1,Qt::AscendingOrder);   //сортируем модель по названием рыб(по алфавиту)
     model->setEditStrategy(QSqlTableModel::OnManualSubmit);
     //qDebug()<<" start setupModelDb  CLOSE";
 }
@@ -260,7 +270,7 @@ void MainWindow::createTableViewUi()
 {
     //qDebug()<<" start createTableViewUi";
     ui->tableViewBd->setModel(model);             // Устанавливаем модель на TableView
-    ui->tableViewBd->setColumnHidden(0, true);    // Скрываем колонку с id записей
+    ui->tableViewBd->setColumnHidden(0, true);    // Скрываем колонки с лишними записями
     ui->tableViewBd->setColumnHidden(3, true);
     ui->tableViewBd->setColumnHidden(4, true);
     ui->tableViewBd->setColumnHidden(5, true);
@@ -278,7 +288,6 @@ void MainWindow::createTableViewUi()
     //ui->tableViewBd->horizontalHeader()->setStretchLastSection(true);
     ui->tableViewBd->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     model->select(); // Делаем выборку данных из таблицы
-    //model->setData(model->index(1,1),"3",Qt::EditRole);
     //model->submitAll();
 }
 
@@ -350,4 +359,32 @@ void MainWindow::iconActivated(QSystemTrayIcon::ActivationReason reason)
     default:
         break;
     }
+}
+
+void MainWindow::on_actionAbout_triggered()
+{
+    QMessageBox::information(this, tr("About"), tr("FisherMan Guide\n"
+                                                   "by Evgeny Zorin\n"
+                                                   "2020"));
+}
+
+void MainWindow::on_btnPull_clicked()
+{
+    if(MsgController->socket->isOpen()){
+        MsgController->socket->write("{\"type\":\"select\",\"params\":\"TestFish\"}");
+        MsgController->socket->waitForBytesWritten(250);
+    }
+    else{
+        QMessageBox::information(this, tr("Information"), tr("Fail connection."));
+    }
+}
+
+void MainWindow::on_btbSend_clicked()
+{
+
+}
+
+void MainWindow::on_btnClear_clicked()
+{
+
 }
