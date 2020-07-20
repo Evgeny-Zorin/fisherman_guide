@@ -178,7 +178,7 @@
         <item row="7" column="0" colspan="3">
          <widget class="QLabel" name="label">
           <property name="text">
-           <string>Прогноз погоды по названию города:</string>
+           <string>Weather forecast by city name:</string>
           </property>
          </widget>
         </item>
@@ -339,7 +339,7 @@
      <item row="1" column="0">
       <widget class="QPushButton" name="DockMapBtn">
        <property name="text">
-        <string>Прогноз!</string>
+        <string>Get a forecast!</string>
        </property>
       </widget>
      </item>

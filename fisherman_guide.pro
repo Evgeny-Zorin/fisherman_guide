@@ -46,6 +46,7 @@ FORMS += \
 
 TRANSLATIONS += \
     fisherman_guide_ru_RU.ts
+CODECFORSRC = UTF-8
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
@@ -57,4 +58,5 @@ RESOURCES += \
 
 DISTFILES += \
     .gitignore \
-    FishGuadeDB.db
+    FishGuadeDB.db \
+    fisherman_guide_ru_RU.qm
